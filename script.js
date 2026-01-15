@@ -1,4 +1,3 @@
-// Estado da aplicação
 const state = {
     uploadedFiles: [],
     processedAddons: {
@@ -16,12 +15,81 @@ const state = {
     uiFeedback: {
         dedupe: null
     },
-    duplicateSelection: {}
+    duplicateSelection: {},
+    _cache: {
+        decompressedFiles: new Map(),
+        lastCleanup: Date.now()
+    }
+};
+
+const CONFIG = {
+    MAX_FILE_SIZE: 3 * 1024 * 1024 * 1024,
+    MAX_FILES: 200,
+    CACHE_TTL: 5 * 60 * 1000,
+    COMPRESSION_LEVEL: 6,
+    SUPPORTED_EXTENSIONS: ['.zip', '.rar', '.mcpack', '.mcaddon', '.mcworld', '.tar', '.gz', '.tgz', '.7z']
 };
 
 let __packIdSeq = 0;
 function __genPackId() {
     return `pack_${Date.now()}_${__packIdSeq++}`;
+}
+
+function cleanupCache() {
+    const now = Date.now();
+    if (now - state._cache.lastCleanup > CONFIG.CACHE_TTL) {
+        state._cache.decompressedFiles.clear();
+        state._cache.lastCleanup = now;
+        console.log('🧹 Cache limpo');
+    }
+}
+
+function validateFile(file) {
+    const errors = [];
+    
+    if (file.size > CONFIG.MAX_FILE_SIZE) {
+        errors.push(`Arquivo muito grande (máx: ${formatFileSize(CONFIG.MAX_FILE_SIZE)})`);
+    }
+    
+    if (file.size === 0) {
+        errors.push('Arquivo vazio');
+    }
+    
+    const fileName = file.name.toLowerCase();
+    const extension = fileName.substring(fileName.lastIndexOf('.'));
+    const isTarGz = fileName.endsWith('.tar.gz');
+    const isValid = CONFIG.SUPPORTED_EXTENSIONS.includes(extension) || isTarGz;
+    
+    if (!isValid) {
+        errors.push(`Extensão não suportada: ${extension}`);
+    }
+    
+    return {
+        valid: errors.length === 0,
+        errors
+    };
+}
+
+let toastTimeout = null;
+function showToast(message, type = 'info', duration = 3000) {
+    let toast = document.querySelector('.toast');
+    if (!toast) {
+        toast = document.createElement('div');
+        toast.className = 'toast';
+        document.body.appendChild(toast);
+    }
+    
+    if (toastTimeout) clearTimeout(toastTimeout);
+    
+    toast.textContent = message;
+    toast.className = `toast ${type}`;
+    
+    toast.offsetHeight;
+    toast.classList.add('show');
+    
+    toastTimeout = setTimeout(() => {
+        toast.classList.remove('show');
+    }, duration);
 }
 
 const dropZone = document.getElementById('dropZone');
@@ -49,27 +117,98 @@ const resultsTitle = document.getElementById('resultsTitle');
 const activationTitle = document.getElementById('activationTitle');
 const activationDescription = document.getElementById('activationDescription');
 
-dropZone.addEventListener('click', () => fileInput.click());
+function hapticFeedback(type = 'light') {
+    if ('vibrate' in navigator) {
+        const patterns = {
+            light: [10],
+            medium: [20],
+            heavy: [30],
+            success: [10, 50, 10],
+            error: [50, 30, 50]
+        };
+        navigator.vibrate(patterns[type] || patterns.light);
+    }
+}
+
+dropZone.addEventListener('click', (e) => {
+    const clickedElement = e.target;
+    const isInteractiveElement = 
+        clickedElement.tagName === 'LABEL' ||
+        clickedElement.tagName === 'SUMMARY' ||
+        clickedElement.tagName === 'DETAILS' ||
+        clickedElement.tagName === 'A' ||
+        clickedElement.closest('details') ||
+        clickedElement.closest('summary');
+    
+    if (!isInteractiveElement) {
+        hapticFeedback('light');
+        fileInput.click();
+    }
+});
+
+dropZone.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        hapticFeedback('light');
+        fileInput.click();
+    }
+});
+
 fileInput.addEventListener('change', handleFileSelect);
-processBtn.addEventListener('click', processAddons);
-clearBtn.addEventListener('click', clearFiles);
-downloadBtn.addEventListener('click', downloadOrganizedAddons);
-selectAllBtn.addEventListener('click', selectAllPacks);
-deselectAllBtn.addEventListener('click', deselectAllPacks);
+
+processBtn.addEventListener('click', () => {
+    hapticFeedback('medium');
+    processAddons();
+});
+
+clearBtn.addEventListener('click', () => {
+    hapticFeedback('light');
+    clearFiles();
+});
+
+downloadBtn.addEventListener('click', () => {
+    hapticFeedback('success');
+    downloadOrganizedAddons();
+});
+
+selectAllBtn.addEventListener('click', () => {
+    hapticFeedback('light');
+    selectAllPacks();
+});
+
+deselectAllBtn.addEventListener('click', () => {
+    hapticFeedback('light');
+    deselectAllPacks();
+});
+
 additionalAddons.addEventListener('change', handleAdditionalAddons);
+
+let dragCounter = 0;
 
 dropZone.addEventListener('dragover', (e) => {
     e.preventDefault();
+    e.dataTransfer.dropEffect = 'copy';
+});
+
+dropZone.addEventListener('dragenter', (e) => {
+    e.preventDefault();
+    dragCounter++;
     dropZone.classList.add('drag-over');
 });
 
-dropZone.addEventListener('dragleave', () => {
-    dropZone.classList.remove('drag-over');
+dropZone.addEventListener('dragleave', (e) => {
+    e.preventDefault();
+    dragCounter--;
+    if (dragCounter === 0) {
+        dropZone.classList.remove('drag-over');
+    }
 });
 
 dropZone.addEventListener('drop', async (e) => {
     e.preventDefault();
+    dragCounter = 0;
     dropZone.classList.remove('drag-over');
+    hapticFeedback('medium');
     const files = Array.from(e.dataTransfer.files);
     await addFiles(files);
 });
@@ -80,34 +219,58 @@ async function handleFileSelect(e) {
 }
 
 async function addFiles(files) {
-    const validExtensions = ['.zip', '.rar', '.mcpack', '.mcaddon', '.mcworld', '.tar', '.gz', '.tgz', '.7z'];
+    if (state.uploadedFiles.length + files.length > CONFIG.MAX_FILES) {
+        showToast(`⚠️ Máximo de ${CONFIG.MAX_FILES} arquivos por vez`, 'error');
+        return;
+    }
+    
+    let addedCount = 0;
+    let errorCount = 0;
     
     for (const file of files) {
-            const fileName = file.name.toLowerCase();
-            const extension = fileName.substring(fileName.lastIndexOf('.'));
+        const validation = validateFile(file);
+        if (!validation.valid) {
+            console.warn(`❌ ${file.name}: ${validation.errors.join(', ')}`);
+            showToast(`❌ ${file.name}: ${validation.errors[0]}`, 'error');
+            hapticFeedback('error');
+            errorCount++;
+            continue;
+        }
+        
+        const fileName = file.name.toLowerCase();
+        const extension = fileName.substring(fileName.lastIndexOf('.'));
         const isTarGz = fileName.endsWith('.tar.gz');
         
-        const isValid = validExtensions.includes(extension) || isTarGz;
+        let isWorld = extension === '.mcworld' || fileName.includes('world') || fileName.includes('mundo') || fileName.includes('mapa');
         
-        if (isValid) {
-            let isWorld = extension === '.mcworld' || fileName.includes('world') || fileName.includes('mundo') || fileName.includes('mapa');
-            
-            if (!isWorld && (extension === '.zip' || extension === '.tar' || isTarGz)) {
+        if (!isWorld && (extension === '.zip' || extension === '.tar' || isTarGz)) {
+            try {
                 isWorld = await checkIfIsWorld(file);
+            } catch (err) {
+                console.warn('Erro ao verificar mundo:', err);
             }
-            
-            if (isWorld) {
-                state.uploadedFiles = [file];
-                state.worldMode = true;
-            } else {
-                const exists = state.uploadedFiles.some(f => f.name === file.name && f.size === file.size);
-                if (!exists) {
-                    state.uploadedFiles.push(file);
-                }
-            }
-        } else {
-            alert(`Arquivo ${file.name} não é suportado. Use formatos compactados como .zip, .rar, .tar.gz, etc.`);
         }
+        
+        if (isWorld) {
+            state.uploadedFiles = [file];
+            state.worldMode = true;
+            showToast('🌍 Mundo detectado!', 'success');
+            addedCount = 1;
+            break; // Mundo substitui tudo
+        } else {
+            const exists = state.uploadedFiles.some(f => f.name === file.name && f.size === file.size);
+            if (!exists) {
+                state.uploadedFiles.push(file);
+                addedCount++;
+            }
+        }
+    }
+    
+    if (addedCount > 0) {
+        const count = state.uploadedFiles.length;
+        showToast(`✅ ${count} arquivo${count > 1 ? 's' : ''} pronto${count > 1 ? 's' : ''}`, 'success', 2000);
+    } else if (errorCount > 0) {
+        showToast(`❌ ${errorCount} arquivo${errorCount > 1 ? 's' : ''} com erro`, 'error');
     }
     
     renderFilesList();
@@ -145,21 +308,42 @@ function renderFilesList() {
         return;
     }
     
+    const truncateName = (name, maxLen = 35) => {
+        if (name.length <= maxLen) return name;
+        const ext = name.lastIndexOf('.');
+        const extension = ext > -1 ? name.slice(ext) : '';
+        const baseName = ext > -1 ? name.slice(0, ext) : name;
+        const truncLen = maxLen - extension.length - 3;
+        return baseName.slice(0, truncLen) + '...' + extension;
+    };
+    
     filesList.innerHTML = state.uploadedFiles.map((file, index) => `
-        <div class="file-item">
+        <div class="file-item" role="listitem">
             <div class="file-info">
-                <span class="file-icon">📦</span>
+                <span class="file-icon" aria-hidden="true">${getFileIcon(file.name)}</span>
                 <div class="file-details">
-                    <h4>${file.name}</h4>
+                    <h4 title="${file.name}">${truncateName(file.name)}</h4>
                     <p>${formatFileSize(file.size)}</p>
                 </div>
             </div>
-            <button class="file-remove" onclick="removeFile(${index})">❌ Remover</button>
+            <button class="file-remove" onclick="removeFile(${index})" aria-label="Remover ${file.name}">
+                <span aria-hidden="true">✕</span> Remover
+            </button>
         </div>
     `).join('');
 }
 
+function getFileIcon(fileName) {
+    const name = fileName.toLowerCase();
+    if (name.endsWith('.mcworld')) return '🌍';
+    if (name.endsWith('.mcpack') || name.endsWith('.mcaddon')) return '📦';
+    if (name.endsWith('.zip') || name.endsWith('.7z')) return '🗜️';
+    if (name.endsWith('.rar')) return '📁';
+    return '📄';
+}
+
 function removeFile(index) {
+    hapticFeedback('light');
     state.uploadedFiles.splice(index, 1);
     renderFilesList();
     updateActionsVisibility();
@@ -239,7 +423,8 @@ async function processAddons() {
         
     } catch (error) {
         console.error('Erro ao processar addons:', error);
-        alert('Erro ao processar addons: ' + error.message);
+        showToast(`❌ Erro: ${error.message}`, 'error', 5000);
+        hapticFeedback('error');
         progressSection.style.display = 'none';
         actions.style.display = 'flex';
     }
@@ -459,7 +644,7 @@ async function decompressFile(file) {
     try {
         if (fileName.endsWith('.rar')) {
             console.warn('⚠️ Arquivo RAR detectado:', fileName);
-            alert(`⚠️ Formato RAR Detectado\n\nArquivos .rar têm suporte limitado no navegador.\n\nPor favor:\n1. Extraia o arquivo .rar no seu computador\n2. Recompacte como .zip ou .tar.gz\n3. Envie novamente\n\nOu tente: Alguns arquivos .rar podem funcionar parcialmente.`);
+            showToast('⚠️ RAR tem suporte limitado - prefira .zip', 'error', 5000);
         }
         
         if (fileName.endsWith('.gz')) {
@@ -835,6 +1020,24 @@ function updateProgress(percentage, text) {
     progressText.textContent = text;
 }
 
+function calculateTotalSize() {
+    let total = 0;
+    
+    const allPacks = [
+        ...state.processedAddons.behaviorPacks,
+        ...state.processedAddons.resourcePacks,
+        ...state.processedAddons.unknownPacks
+    ];
+    
+    for (const pack of allPacks) {
+        for (const blob of Object.values(pack.files)) {
+            total += blob.size || 0;
+        }
+    }
+    
+    return total;
+}
+
 function showResults() {
     progressSection.style.display = 'none';
     resultsSection.style.display = 'block';
@@ -843,6 +1046,13 @@ function showResults() {
     const totalResource = state.processedAddons.resourcePacks.length;
     const totalUnknown = state.processedAddons.unknownPacks.length;
     const totalAddons = totalBehavior + totalResource + totalUnknown;
+    const totalSize = calculateTotalSize();
+    
+    const corruptedCount = [
+        ...state.processedAddons.behaviorPacks,
+        ...state.processedAddons.resourcePacks,
+        ...state.processedAddons.unknownPacks
+    ].filter(p => p.hasCorruptedManifest).length;
     
     if (state.worldMode && state.worldData) {
         resultsTitle.textContent = '🌍 Gerenciamento de Mundo';
@@ -874,6 +1084,10 @@ function showResults() {
             <h4>${totalResource}</h4>
             <p>Resource Packs</p>
         </div>
+        <div class="stat-card">
+            <h4>${formatFileSize(totalSize)}</h4>
+            <p>Tamanho Total</p>
+        </div>
     `;
     
     if (totalUnknown > 0) {
@@ -881,6 +1095,15 @@ function showResults() {
         <div class="stat-card unknown-stat">
             <h4>${totalUnknown}</h4>
             <p>Packs Desconhecidos</p>
+        </div>
+        `;
+    }
+    
+    if (corruptedCount > 0) {
+        statsHTML += `
+        <div class="stat-card" style="border-left-color: #ff9800;">
+            <h4 style="color: #ff9800;">${corruptedCount}</h4>
+            <p>Com Manifest Inválido</p>
         </div>
         `;
     }
@@ -1210,7 +1433,6 @@ function renderActivationOptions() {
     packsActivation.innerHTML = html;
 }
 
-// Toggle ativação de pack
 function togglePackActivation(checkbox) {
     const packId = checkbox.dataset.packId;
     const packType = checkbox.dataset.packType;
@@ -1496,26 +1718,38 @@ function generateResourcePacksActivation() {
 }
 
 async function downloadOrganizedAddons() {
+    const startTime = Date.now();
+    
     try {
         downloadBtn.disabled = true;
-        downloadBtn.innerHTML = '⏳ Gerando arquivo...';
+        downloadBtn.classList.add('btn-loading');
+        downloadBtn.innerHTML = '<span>⏳ Preparando...</span>';
         
         const finalZip = new JSZip();
         
+        const totalPacks = state.processedAddons.behaviorPacks.length + 
+                          state.processedAddons.resourcePacks.length + 
+                          state.processedAddons.unknownPacks.length;
+        let processedPacks = 0;
+        
         for (const pack of state.processedAddons.behaviorPacks) {
-            const targetPath = (pack.fromWorld && pack.originalPath) ? pack.originalPath : `behavior_packs/${pack.name}/`;
+            const targetPath = (pack.fromWorld && pack.originalPath) ? pack.originalPath : `behavior_packs/${sanitizeFolderName(pack.name)}/`;
             const packFolder = finalZip.folder(targetPath.replace(/\\/g,'/'));
             for (const [filePath, fileBlob] of Object.entries(pack.files)) {
                 packFolder.file(filePath, fileBlob);
             }
+            processedPacks++;
+            downloadBtn.innerHTML = `<span>⏳ ${Math.round((processedPacks/totalPacks)*100)}%</span>`;
         }
         
         for (const pack of state.processedAddons.resourcePacks) {
-            const targetPath = (pack.fromWorld && pack.originalPath) ? pack.originalPath : `resource_packs/${pack.name}/`;
+            const targetPath = (pack.fromWorld && pack.originalPath) ? pack.originalPath : `resource_packs/${sanitizeFolderName(pack.name)}/`;
             const packFolder = finalZip.folder(targetPath.replace(/\\/g,'/'));
             for (const [filePath, fileBlob] of Object.entries(pack.files)) {
                 packFolder.file(filePath, fileBlob);
             }
+            processedPacks++;
+            downloadBtn.innerHTML = `<span>⏳ ${Math.round((processedPacks/totalPacks)*100)}%</span>`;
         }
         
         for (const pack of state.processedAddons.unknownPacks) {
@@ -1528,49 +1762,75 @@ async function downloadOrganizedAddons() {
                 }
             } else {
                 console.warn(`⚠️ Pack "${pack.name}" não categorizado, adicionando a "unknown_packs/"`);
-                const packFolder = finalZip.folder(`unknown_packs/${pack.name}`);
+                const packFolder = finalZip.folder(`unknown_packs/${sanitizeFolderName(pack.name)}`);
                 
                 for (const [filePath, fileBlob] of Object.entries(pack.files)) {
                     packFolder.file(filePath, fileBlob);
                 }
             }
+            processedPacks++;
         }
         
         const behaviorActivation = generateBehaviorPacksActivation();
         const resourceActivation = generateResourcePacksActivation();
         
-        if (behaviorActivation.length > 0) {
-            const behaviorJson = formatPacksJson(behaviorActivation);
-            finalZip.file('world_behavior_packs.json', behaviorJson);
-        }
+        const behaviorJson = formatPacksJson(behaviorActivation);
+        finalZip.file('world_behavior_packs.json', behaviorJson);
         
-        if (resourceActivation.length > 0) {
-            const resourceJson = formatPacksJson(resourceActivation);
-            finalZip.file('world_resource_packs.json', resourceJson);
-        }
+        const resourceJson = formatPacksJson(resourceActivation);
+        finalZip.file('world_resource_packs.json', resourceJson);
+        
+        downloadBtn.innerHTML = '<span>⏳ Compactando...</span>';
         
         const blob = await finalZip.generateAsync({
             type: 'blob',
             compression: 'DEFLATE',
-            compressionOptions: { level: 6 }
+            compressionOptions: { level: CONFIG.COMPRESSION_LEVEL }
+        }, (metadata) => {
+            const percent = Math.round(metadata.percent);
+            if (percent % 10 === 0) {
+                downloadBtn.innerHTML = `<span>⏳ Compactando ${percent}%</span>`;
+            }
         });
+        
+        const timestamp = new Date().toISOString().slice(0,10);
+        const fileName = state.worldMode && state.worldData 
+            ? `${sanitizeFolderName(state.worldData.name)}_addons_${timestamp}.zip`
+            : `minecraft_addons_${timestamp}.zip`;
         
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = 'minecraft_addons_organized.zip';
+        a.download = fileName;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
         
+        cleanupCache();
+        
+        const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
+        showToast(`✅ Download concluído em ${elapsed}s`, 'success');
+        hapticFeedback('success');
+        
         downloadBtn.disabled = false;
-        downloadBtn.innerHTML = '📥 Baixar Addons Organizados';
+        downloadBtn.classList.remove('btn-loading');
+        downloadBtn.innerHTML = `<span id="downloadBtnText">📥 Baixar Addons Organizados</span>`;
         
     } catch (error) {
         console.error('Erro ao gerar ZIP:', error);
-        alert('Erro ao gerar arquivo: ' + error.message);
+        showToast(`❌ Erro ao gerar: ${error.message}`, 'error', 5000);
+        hapticFeedback('error');
         downloadBtn.disabled = false;
-        downloadBtn.innerHTML = '📥 Baixar Addons Organizados';
+        downloadBtn.classList.remove('btn-loading');
+        downloadBtn.innerHTML = `<span id="downloadBtnText">📥 Baixar Addons Organizados</span>`;
     }
+}
+
+function sanitizeFolderName(name) {
+    return name
+        .replace(/[<>:"/\\|?*]/g, '_')
+        .replace(/\s+/g, ' ')
+        .trim()
+        .substring(0, 100); // Limitar tamanho
 }

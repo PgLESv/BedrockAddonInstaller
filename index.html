@@ -2,8 +2,13 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#4caf50">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
+    <meta name="theme-color" content="#667eea">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="description" content="Organize e ative addons de Minecraft Bedrock direto no navegador. Suporta .mcpack, .mcaddon, .zip e mais.">
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect rx='12' width='64' height='64' fill='%234caf50'/%3E%3Cpath d='M20 36l12-16 12 16' stroke='%23fff' stroke-width='6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
     <meta property="og:title" content="Instalador de addons do Bedrock">
     <meta property="og:description" content="Organize e ative addons de Minecraft Bedrock direto no navegador.">
@@ -25,22 +30,30 @@
 
         <main>
             <div class="upload-section">
-                <div class="drop-zone" id="dropZone">
-                    <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <div class="drop-zone" id="dropZone" role="button" tabindex="0" aria-label="Área para enviar arquivos de addon">
+                    <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
                         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                         <polyline points="17 8 12 3 7 8"></polyline>
                         <line x1="12" y1="3" x2="12" y2="15"></line>
                     </svg>
-                    <h2>Arraste e solte seus addons aqui</h2>
-                    <p>ou</p>
-                    <label for="fileInput" class="btn-primary">
-                        Selecionar Arquivos
+                    <h2 class="drop-zone-title">Arraste e solte seus addons aqui</h2>
+                    <p class="drop-zone-subtitle">ou toque para selecionar</p>
+                    <label for="fileInput" class="btn-primary btn-upload">
+                        📁 Selecionar Arquivos
                     </label>
                     <input type="file" id="fileInput" multiple accept=".zip,.rar,.mcpack,.mcaddon,.mcworld,.tar,.gz,.tar.gz,.tgz,.7z">
-                    <p class="file-types">Suporta: .zip, .mcpack, .mcaddon, .mcworld, .tar, .tar.gz, .tgz, .7z</p>
-                    <p class="file-types">⚠️ .rar tem suporte limitado - prefira .zip</p>
-                    <p class="file-types">💡 Pode enviar pastas compactadas com múltiplos addons dentro!</p>
-                    <p class="file-types">🌍 Ou envie um mundo compactado para gerenciar seus addons!</p>
+                    <div class="file-types-container">
+                        <p class="file-types">✅ Suporta: .zip, .mcpack, .mcaddon, .mcworld, .tar.gz, .7z</p>
+                        <p class="file-types warning">⚠️ .rar tem suporte limitado - prefira .zip</p>
+                        <details class="file-tips">
+                            <summary>💡 Dicas de uso</summary>
+                            <ul>
+                                <li>Pode enviar pastas .zip com múltiplos addons</li>
+                                <li>Envie um mundo para gerenciar seus addons</li>
+                                <li>Selecione vários arquivos de uma vez</li>
+                            </ul>
+                        </details>
+                    </div>
                 </div>
             </div>
 
@@ -48,11 +61,13 @@
             </div>
 
             <div class="actions" id="actions" style="display: none;">
-                <button class="btn-success" id="processBtn">
-                    <span>🚀 Processar Addons</span>
+                <button class="btn-success btn-action" id="processBtn" aria-label="Processar todos os addons">
+                    <span class="btn-icon">🚀</span>
+                    <span class="btn-text">Processar Addons</span>
                 </button>
-                <button class="btn-danger" id="clearBtn">
-                    <span>🗑️ Limpar Lista</span>
+                <button class="btn-danger btn-action" id="clearBtn" aria-label="Limpar lista de arquivos">
+                    <span class="btn-icon">🗑️</span>
+                    <span class="btn-text">Limpar</span>
                 </button>
             </div>
 
@@ -101,28 +116,135 @@
                 </button>
             </div>
 
-            <div class="info-section">
-                <h3>ℹ️ Como Funciona</h3>
-                <ol>
-                    <li>Faça upload de um ou mais arquivos de addon (.zip, .rar, .mcpack, .mcaddon)
-                        <ul>
-                            <li> Pode enviar uma pasta .zip contendo vários addons dentro!</li>
-                        </ul>
-                    </li>
-                    <li>O sistema irá descompactar recursivamente e analisar todos os addons encontrados</li>
-                    <li>Os addons serão automaticamente organizados em:
-                        <ul>
-                            <li><strong>behavior_packs/</strong> - Para Behavior Packs (type: "data")</li>
-                            <li><strong>resource_packs/</strong> - Para Resource Packs (type: "resources")</li>
-                        </ul>
-                    </li>
-                    <li>Selecione quais addons deseja ativar (opcional)</li>
-                    <li>Baixe o arquivo .zip final com tudo organizado e os arquivos de ativação</li>
-                </ol>
-            </div>
+            <details class="info-section tutorial-section" open>
+                <summary><h3>🌍 Tutorial: Gerenciando Addons de um Mundo</h3></summary>
+                <div class="tutorial-content">
+                    <p class="tutorial-intro">
+                        <strong>Importante:</strong> Quando você envia um mundo (.mcworld), a ferramenta extrai <em>apenas</em> os addons para economizar espaço. 
+                        Siga o passo a passo abaixo para aplicar as alterações no seu mundo original.
+                    </p>
+                    
+                    <div class="tutorial-steps">
+                        <div class="tutorial-step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h4>📤 Envie seu mundo</h4>
+                                <p>Faça upload do arquivo <code>.mcworld</code> ou <code>.zip</code> do seu mundo. A ferramenta vai extrair os addons existentes.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="tutorial-step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h4>✏️ Adicione ou remova addons</h4>
+                                <p>Use os botões para adicionar novos addons ou desmarque os que deseja remover da lista de ativação.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="tutorial-step">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h4>📥 Baixe o arquivo gerado</h4>
+                                <p>O download contém <strong>apenas</strong>:</p>
+                                <ul class="file-list">
+                                    <li>📁 <code>behavior_packs/</code></li>
+                                    <li>📁 <code>resource_packs/</code></li>
+                                    <li>📄 <code>world_behavior_packs.json</code></li>
+                                    <li>📄 <code>world_resource_packs.json</code></li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="tutorial-step">
+                            <div class="step-number">4</div>
+                            <div class="step-content">
+                                <h4>🔄 Substitua no mundo original</h4>
+                                <p>No seu mundo original (descompactado):</p>
+                                <ol>
+                                    <li><strong>Apague</strong> as pastas <code>behavior_packs</code> e <code>resource_packs</code></li>
+                                    <li><strong>Apague</strong> os arquivos <code>world_behavior_packs.json</code> e <code>world_resource_packs.json</code></li>
+                                    <li><strong>Cole</strong> as novas pastas e arquivos gerados pela ferramenta</li>
+                                </ol>
+                            </div>
+                        </div>
+                        
+                        <div class="tutorial-step">
+                            <div class="step-number">5</div>
+                            <div class="step-content">
+                                <h4>✅ Pronto para jogar!</h4>
+                                <p>Após substituir os arquivos, seu mundo está pronto. Não precisa compactar novamente se estiver usando em servidor.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tutorial-tip server-tip">
+                        <span class="tip-icon">🖥️</span>
+                        <div>
+                            <strong>Para Servidores Bedrock</strong>
+                            <p>A pasta do mundo geralmente fica em:</p>
+                            <code class="path-example">worlds/Bedrock level/</code>
+                            <p class="tip-note">O nome <em>"Bedrock level"</em> pode variar conforme configurado no <code>server.properties</code> (campo <code>level-name</code>).</p>
+                            <p class="tip-note">Substitua as pastas e arquivos diretamente dentro dessa pasta. <strong>Não renomeie para .mcworld</strong> — mantenha como pasta normal.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="tutorial-tip mobile-tip">
+                        <span class="tip-icon">📱</span>
+                        <div>
+                            <strong>Para Celular/PC (Singleplayer)</strong>
+                            <p>Se o mundo veio como <code>.mcworld</code>:</p>
+                            <ol>
+                                <li>Extraia o <code>.mcworld</code> (é um .zip) para uma pasta</li>
+                                <li>Substitua as pastas e arquivos</li>
+                                <li>Compacte tudo de volta como <code>.zip</code></li>
+                                <li>Renomeie para <code>.mcworld</code> e importe no jogo</li>
+                            </ol>
+                        </div>
+                    </div>
+                    
+                    <div class="tutorial-warning">
+                        <span class="warning-icon">⚠️</span>
+                        <div>
+                            <strong>Sempre faça backup!</strong>
+                            <p>Antes de fazer qualquer alteração, guarde uma cópia do seu mundo original em um local seguro.</p>
+                        </div>
+                    </div>
+                </div>
+            </details>
 
-            <div class="info-section">
-                <h3>❓ FAQ</h3>
+            <details class="info-section">
+                <summary><h3>📦 Tutorial: Organizando Addons Avulsos</h3></summary>
+                <div class="tutorial-content">
+                    <div class="tutorial-steps">
+                        <div class="tutorial-step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h4>📤 Envie seus addons</h4>
+                                <p>Faça upload de arquivos <code>.mcpack</code>, <code>.mcaddon</code> ou <code>.zip</code> contendo addons.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="tutorial-step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h4>⚙️ Selecione quais ativar</h4>
+                                <p>Marque os addons que deseja que sejam ativados automaticamente quando aplicados a um mundo.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="tutorial-step">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h4>📥 Baixe e aplique</h4>
+                                <p>Extraia o conteúdo na pasta do seu mundo ou use para criar um novo mundo com os addons já configurados.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </details>
+
+            <details class="info-section">
+                <summary><h3>❓ Perguntas Frequentes</h3></summary>
                 <h4 style="margin-top:10px;margin-bottom:6px;">O que significa “manifest corrompido/incompleto”?</h4>
                 <p style="color:#cfd8dc;line-height:1.6;">
                     Alguns addons vêm com o arquivo <code>manifest.json</code> fora do padrão: comentários, caracteres inválidos ou mesmo JSON malformado. 
@@ -138,7 +260,7 @@
                     A forma recomendada é ajustar/reativar os addons <strong>manualmente</strong> pelo cliente do <strong>Minecraft Bedrock</strong> ou por um gerenciador confiável. 
                     Use este instalador como apoio para organizar, identificar problemas e gerar arquivos de ativação, mas valide tudo no jogo.
                 </p>
-            </div>
+            </details>
         </main>
 
         <footer>
