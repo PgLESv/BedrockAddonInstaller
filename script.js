@@ -494,6 +494,18 @@ async function processWorld(worldFile) {
                         processWorldAddon(zip, relativePath, 'resource', worldRootPath)
                     );
                 }
+                // Detectar addons em .zip/.mcpack dentro de behavior_packs/
+                else if (normalizedPath.includes('behavior_packs/') && (normalizedPath.endsWith('.zip') || normalizedPath.endsWith('.mcpack'))) {
+                    promises.push(
+                        processWorldNestedZipAddon(zipEntry, 'behavior', relativePath)
+                    );
+                }
+                // Detectar addons em .zip/.mcpack dentro de resource_packs/
+                else if (normalizedPath.includes('resource_packs/') && (normalizedPath.endsWith('.zip') || normalizedPath.endsWith('.mcpack'))) {
+                    promises.push(
+                        processWorldNestedZipAddon(zipEntry, 'resource', relativePath)
+                    );
+                }
             }
         });
         
@@ -629,6 +641,138 @@ async function processWorldAddon(zip, manifestPath, suggestedPackType, worldRoot
         
     } catch (error) {
         console.error(`❌ Erro ao processar addon do mundo em ${manifestPath}:`, error);
+    }
+}
+
+async function processWorldNestedZipAddon(zipEntry, suggestedPackType, originalPath) {
+    try {
+        console.log(`📦 Processando addon em ZIP dentro do mundo: ${originalPath}`);
+        
+        const zipData = await zipEntry.async('arraybuffer');
+        const nestedZip = await JSZip.loadAsync(zipData);
+        
+        let manifestContent = null;
+        let manifestPath = null;
+        
+        nestedZip.forEach((relativePath, entry) => {
+            if (!entry.dir && relativePath.endsWith('manifest.json')) {
+                const depth = relativePath.split('/').length;
+                if (!manifestPath || depth < manifestPath.split('/').length) {
+                    manifestPath = relativePath;
+                }
+            }
+        });
+        
+        if (!manifestPath) {
+            console.warn(`⚠️ Nenhum manifest.json encontrado no ZIP aninhado: ${originalPath}`);
+            return;
+        }
+        
+        manifestContent = await nestedZip.file(manifestPath).async('string');
+        manifestContent = removeJsonComments(manifestContent);
+        
+        let manifest;
+        try {
+            manifest = JSON.parse(manifestContent);
+        } catch (parseError) {
+            console.error(`❌ Erro ao fazer parse do JSON em ${originalPath}:`, parseError.message);
+            
+            let cleaned = manifestContent
+                .replace(/[\x00-\x09\x0B-\x0C\x0E-\x1F\x7F]/g, '')
+                .replace(/\r\n/g, '\n')
+                .replace(/\r/g, '\n');
+            
+            try {
+                manifest = JSON.parse(cleaned);
+                console.log(`✅ JSON corrigido com limpeza adicional em ${originalPath}`);
+            } catch (secondError) {
+                console.warn(`⚠️ JSON corrompido no ZIP aninhado: ${originalPath}`);
+                
+                const fileName = originalPath.split('/').pop().replace(/\.(zip|mcpack)$/i, '');
+                const randomUUID = () => 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+                    const r = Math.random() * 16 | 0;
+                    return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+                });
+                
+                manifest = {
+                    format_version: 2,
+                    header: {
+                        name: fileName + ' ⚠️',
+                        description: 'Manifest corrompido - Pack do mundo (ZIP)',
+                        uuid: randomUUID(),
+                        version: [1, 0, 0],
+                        min_engine_version: [1, 20, 0]
+                    },
+                    modules: []
+                };
+            }
+        }
+        
+        const addonName = manifest.header?.name || originalPath.split('/').pop().replace(/\.(zip|mcpack)$/i, '') || 'Unknown';
+        
+        let packType = suggestedPackType;
+        
+        if (manifest.modules && Array.isArray(manifest.modules)) {
+            for (const module of manifest.modules) {
+                if (module.type === 'data') {
+                    packType = 'behavior';
+                    break;
+                } else if (module.type === 'resources') {
+                    packType = 'resource';
+                    break;
+                }
+            }
+        }
+        
+        if (!packType || (packType !== 'behavior' && packType !== 'resource')) {
+            packType = 'unknown';
+        }
+        
+        const manifestRoot = manifestPath.includes('/') ? manifestPath.substring(0, manifestPath.lastIndexOf('/') + 1) : '';
+        
+        const addonFiles = {};
+        const promises = [];
+        
+        nestedZip.forEach((relativePath, entry) => {
+            if (!entry.dir) {
+                let relativePathInAddon = relativePath;
+                if (manifestRoot && relativePath.startsWith(manifestRoot)) {
+                    relativePathInAddon = relativePath.substring(manifestRoot.length);
+                }
+                
+                promises.push(
+                    entry.async('blob').then(blob => {
+                        addonFiles[relativePathInAddon] = blob;
+                    })
+                );
+            }
+        });
+        
+        await Promise.all(promises);
+        
+        const addonData = {
+            _id: __genPackId(),
+            name: addonName,
+            files: addonFiles,
+            manifest: manifest,
+            fromWorld: true,
+            fromNestedZip: true,
+            originalPath: originalPath,
+            hasCorruptedManifest: manifest.header?.description?.includes('Manifest corrompido') || false
+        };
+        
+        console.log(`✅ Addon de ZIP aninhado processado: ${addonName} (${packType})`);
+        
+        if (packType === 'behavior') {
+            state.processedAddons.behaviorPacks.push(addonData);
+        } else if (packType === 'resource') {
+            state.processedAddons.resourcePacks.push(addonData);
+        } else {
+            state.processedAddons.unknownPacks.push(addonData);
+        }
+        
+    } catch (error) {
+        console.error(`❌ Erro ao processar addon ZIP aninhado em ${originalPath}:`, error);
     }
 }
 
@@ -1733,7 +1877,15 @@ async function downloadOrganizedAddons() {
         let processedPacks = 0;
         
         for (const pack of state.processedAddons.behaviorPacks) {
-            const targetPath = (pack.fromWorld && pack.originalPath) ? pack.originalPath : `behavior_packs/${sanitizeFolderName(pack.name)}/`;
+            let targetPath;
+            if (pack.fromNestedZip) {
+                // Addons de ZIP aninhado: usar behavior_packs/NomeDoAddon/
+                targetPath = `behavior_packs/${sanitizeFolderName(pack.name)}/`;
+            } else if (pack.fromWorld && pack.originalPath) {
+                targetPath = pack.originalPath;
+            } else {
+                targetPath = `behavior_packs/${sanitizeFolderName(pack.name)}/`;
+            }
             const packFolder = finalZip.folder(targetPath.replace(/\\/g,'/'));
             for (const [filePath, fileBlob] of Object.entries(pack.files)) {
                 packFolder.file(filePath, fileBlob);
@@ -1743,7 +1895,15 @@ async function downloadOrganizedAddons() {
         }
         
         for (const pack of state.processedAddons.resourcePacks) {
-            const targetPath = (pack.fromWorld && pack.originalPath) ? pack.originalPath : `resource_packs/${sanitizeFolderName(pack.name)}/`;
+            let targetPath;
+            if (pack.fromNestedZip) {
+                // Addons de ZIP aninhado: usar resource_packs/NomeDoAddon/
+                targetPath = `resource_packs/${sanitizeFolderName(pack.name)}/`;
+            } else if (pack.fromWorld && pack.originalPath) {
+                targetPath = pack.originalPath;
+            } else {
+                targetPath = `resource_packs/${sanitizeFolderName(pack.name)}/`;
+            }
             const packFolder = finalZip.folder(targetPath.replace(/\\/g,'/'));
             for (const [filePath, fileBlob] of Object.entries(pack.files)) {
                 packFolder.file(filePath, fileBlob);
