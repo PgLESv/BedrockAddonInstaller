@@ -1,0 +1,21 @@
+{
+  "name": "bedrock-addon-installer",
+  "version": "1.1.0",
+  "description": "Ferramenta web para organizar e ativar addons do Minecraft Bedrock Edition",
+  "type": "module",
+  "scripts": {
+    "start": "npx serve .",
+    "dev": "npx serve .",
+    "build": "npx esbuild src/main.js --bundle --outfile=script.js --format=iife",
+    "test": "node scripts/test.js"
+  },
+  "keywords": [
+    "minecraft",
+    "bedrock",
+    "mcpack",
+    "mcaddon",
+    "mcworld"
+  ],
+  "author": "PgL",
+  "license": "MIT"
+}

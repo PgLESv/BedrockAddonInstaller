@@ -19,6 +19,7 @@
     <meta name="twitter:description" content="Organize e ative addons de Minecraft Bedrock direto no navegador.">
     <meta name="twitter:image" content="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 630'%3E%3Crect width='1200' height='630' fill='%23667eea'/%3E%3Ctext x='50%' y='45%' dominant-baseline='middle' text-anchor='middle' font-size='64' fill='%23ffffff' font-family='Segoe UI,Arial,sans-serif'%3EInstalador de Addons%3C/text%3E%3Ctext x='50%' y='60%' dominant-baseline='middle' text-anchor='middle' font-size='36' fill='%23e8f5e9' font-family='Segoe UI,Arial,sans-serif'%3EMinecraft Bedrock%3C/text%3E%3C/svg%3E">
     <title>Instalador de addons do Bedrock</title>
+    <link rel="manifest" href="manifest.webmanifest">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -41,10 +42,10 @@
                     <label for="fileInput" class="btn-primary btn-upload">
                         📁 Selecionar Arquivos
                     </label>
-                    <input type="file" id="fileInput" multiple accept=".zip,.rar,.mcpack,.mcaddon,.mcworld,.tar,.gz,.tar.gz,.tgz,.7z">
+                    <input type="file" id="fileInput" multiple accept=".zip,.mcpack,.mcaddon,.mcworld,.tar,.gz,.tar.gz,.tgz">
                     <div class="file-types-container">
-                        <p class="file-types">✅ Suporta: .zip, .mcpack, .mcaddon, .mcworld, .tar.gz, .7z</p>
-                        <p class="file-types warning">⚠️ .rar tem suporte limitado - prefira .zip</p>
+                        <p class="file-types">✅ Suporta: .zip, .mcpack, .mcaddon, .mcworld, .tar.gz</p>
+                        <p class="file-types warning">⚠️ .rar e .7z não são suportados no navegador — extraia e use .zip</p>
                         <details class="file-tips">
                             <summary>💡 Dicas de uso</summary>
                             <ul>
@@ -93,7 +94,7 @@
                         <label for="additionalAddons" class="btn-primary">
                             📦 Selecionar Addons para Adicionar
                         </label>
-                        <input type="file" id="additionalAddons" multiple accept=".zip,.rar,.mcpack,.mcaddon,.tar,.gz,.tar.gz,.tgz,.7z" style="display: none;">
+                        <input type="file" id="additionalAddons" multiple accept=".zip,.mcpack,.mcaddon,.tar,.gz,.tar.gz,.tgz" style="display: none;">
                         <div id="additionalAddonsList"></div>
                     </div>
                 </div>

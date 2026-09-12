@@ -660,6 +660,139 @@ main {
     flex-shrink: 0;
 }
 
+.pack-main-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--spacing-sm);
+    flex-wrap: wrap;
+}
+
+.pack-main-row .pack-checkbox {
+    flex: 1;
+    min-width: 240px;
+}
+
+.pack-actions {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.btn-inline {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    border-radius: var(--border-radius-sm);
+    cursor: pointer;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--text-primary);
+    transition: all var(--transition-fast);
+    text-decoration: none;
+}
+
+.btn-inline:hover {
+    background: rgba(255, 255, 255, 0.18);
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-1px);
+}
+
+.btn-inline:active {
+    transform: translateY(0);
+}
+
+.btn-inline.btn-download-pack {
+    background: rgba(76, 175, 80, 0.15);
+    border-color: rgba(76, 175, 80, 0.35);
+    color: #a5d6a7;
+}
+
+.btn-inline.btn-download-pack:hover {
+    background: rgba(76, 175, 80, 0.28);
+    border-color: rgba(76, 175, 80, 0.5);
+    color: #ffffff;
+}
+
+/* Manifest Validation Styling */
+.validation-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 4px;
+    margin-left: 6px;
+    vertical-align: middle;
+}
+
+.validation-badge.val-error {
+    background: rgba(244, 67, 54, 0.18);
+    color: #ff8a80;
+    border: 1px solid rgba(244, 67, 54, 0.4);
+}
+
+.validation-badge.val-warning {
+    background: rgba(255, 193, 7, 0.18);
+    color: #ffe082;
+    border: 1px solid rgba(255, 193, 7, 0.4);
+}
+
+.validation-details {
+    margin-top: 8px;
+    background: rgba(0, 0, 0, 0.25);
+    border-radius: var(--border-radius-sm);
+    padding: 8px 12px;
+    font-size: 0.8rem;
+    border-left: 3px solid #ffb74d;
+    transition: all var(--transition-fast);
+}
+
+.validation-details.has-errors {
+    border-left-color: var(--danger-color);
+}
+
+.validation-summary {
+    cursor: pointer;
+    font-weight: 600;
+    user-select: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.validation-summary.has-errors {
+    color: #ff8a80;
+}
+
+.validation-summary.has-warnings {
+    color: #ffe082;
+}
+
+.validation-list {
+    margin: 8px 0 2px 18px;
+    padding: 0;
+}
+
+.validation-list li {
+    margin-bottom: 4px;
+    font-size: 0.78rem;
+    line-height: 1.4;
+}
+
+.validation-list li.val-err {
+    color: #ff8a80;
+}
+
+.validation-list li.val-warn {
+    color: #ffe082;
+}
+
 .activation-actions {
     display: flex;
     gap: 10px;
@@ -1229,7 +1362,7 @@ footer {
     .dupe-options { gap: var(--spacing-xs); flex-direction: column; }
     .dupe-option { padding: var(--spacing-sm); min-height: var(--touch-target); }
     .dupe-option input[type="radio"] { width: 22px; height: 22px; }
-    .pack-checkbox input[type=\"checkbox\"] { width: 26px; height: 26px; }
+    .pack-checkbox input[type="checkbox"] { width: 26px; height: 26px; }
     .btn-secondary.small { padding: var(--spacing-sm); font-size: 0.9rem; min-height: var(--touch-target); }
     .activation-actions { flex-direction: column; gap: var(--spacing-xs); }
     .btn-large { font-size: 1.1rem; padding: var(--spacing-md); }
