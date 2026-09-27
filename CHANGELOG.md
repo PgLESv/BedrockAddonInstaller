@@ -2,7 +2,11 @@
 
 ## [Unreleased]
 
-### Added
+- **Priorização Total para Instalação em Servidores Bedrock (EnxadaHost)**:
+  - Reorganização de toda a interface e documentação com foco primário em servidores dedicados.
+  - O **Tutorial 1** agora é o tutorial completo de servidor, exibido aberto por padrão e destacado com badge especial.
+  - Card de instruções no resultado do download com fluxo passo a passo para envio a `worlds/Bedrock level/`.
+  - Inclusão da dica essencial de `texturepack-required=true` no `server.properties` e FAQ específico para servidores.
 - **Reformulação Didática Integral e Novos Mega-Tutoriais**:
   - **Banner de Guia Rápido em 3 Passos**: Orientação visual no topo da interface explicando o fluxo básico (*1. Envie, 2. Processe, 3. Baixe e Jogue*).
   - **Glossário Bedrock para Iniciantes**: Explicações simples em linguagem acessível sobre a diferença entre *Behavior Packs (BP - código/função)*, *Resource Packs (RP - visual/texturas)*, *Manifest / UUID* e formatos de arquivo.

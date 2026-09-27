@@ -25,34 +25,34 @@
 <body>
     <div class="container">
         <header>
-            <h1>🎮 Instalador de Addons do Minecraft Bedrock</h1>
-            <p>O jeito mais fácil de organizar, ativar e instalar mods no seu Minecraft — Celular (Android/iOS), PC (Windows) e Servidores!</p>
+            <h1>🖥️ Instalador de Addons para Servidores Bedrock & Mundos</h1>
+            <p>O jeito mais rápido e fácil de colocar mods no seu <strong>Servidor Bedrock (EnxadaHost)</strong> e nos seus mapas! Gera as pastas e os arquivos de ativação automaticamente.</p>
         </header>
 
         <main>
             <!-- Guia Rápido Visual para Iniciantes -->
             <div class="quick-guide-banner" role="region" aria-label="Instruções rápidas de uso">
-                <h3 class="quick-guide-title">⚡ Como usar esta ferramenta em 3 passos:</h3>
+                <h3 class="quick-guide-title">⚡ Como colocar mods no seu Servidor (EnxadaHost) em 3 passos:</h3>
                 <div class="quick-guide-steps">
                     <div class="quick-guide-step">
                         <div class="quick-step-badge">1</div>
                         <div class="quick-step-text">
-                            <strong>1. Envie seus arquivos</strong>
-                            <span>Arraste ou clique abaixo para escolher seus mods (<code>.mcpack</code>, <code>.mcaddon</code>) ou seu mundo (<code>.mcworld</code>).</span>
+                            <strong>1. Envie seus addons</strong>
+                            <span>Arraste ou clique abaixo para escolher seus mods (<code>.mcpack</code>, <code>.mcaddon</code>, <code>.zip</code>) ou seu mundo (<code>.mcworld</code>).</span>
                         </div>
                     </div>
                     <div class="quick-guide-step">
                         <div class="quick-step-badge">2</div>
                         <div class="quick-step-text">
                             <strong>2. Clique em Processar</strong>
-                            <span>Aperte o botão verde <em>"🚀 Passo 2: Processar Addons"</em> para o sistema ler e organizar tudo automaticamente.</span>
+                            <span>Aperte o botão verde <em>"🚀 Passo 2: Processar Addons"</em> para o sistema separar Behavior e Resource e gerar os arquivos de ativação.</span>
                         </div>
                     </div>
                     <div class="quick-guide-step">
                         <div class="quick-step-badge">3</div>
                         <div class="quick-step-text">
-                            <strong>3. Baixe e Jogue!</strong>
-                            <span>Baixe o pacote organizado ou baixe o mod direto no botão <em>"📥 Baixar .mcpack"</em> para instalar com 2 cliques.</span>
+                            <strong>3. Baixe e Cole no Servidor!</strong>
+                            <span>Baixe o <code>.zip</code> pronto para colar dentro da pasta <code>worlds/Bedrock level/</code> no painel da EnxadaHost!</span>
                         </div>
                     </div>
                 </div>
@@ -65,8 +65,8 @@
                         <polyline points="17 8 12 3 7 8"></polyline>
                         <line x1="12" y1="3" x2="12" y2="15"></line>
                     </svg>
-                    <h2 class="drop-zone-title">Passo 1: Coloque seus arquivos aqui</h2>
-                    <p class="drop-zone-subtitle">Arraste e solte seus mods ou clique no botão verde abaixo:</p>
+                    <h2 class="drop-zone-title">Passo 1: Coloque seus arquivos de addon ou mapa aqui</h2>
+                    <p class="drop-zone-subtitle">Arraste seus mods ou clique no botão verde abaixo para escolher:</p>
                     <label for="fileInput" class="btn-primary btn-upload">
                         📁 Escolher Arquivos no seu Aparelho
                     </label>
@@ -83,8 +83,8 @@
                         <details class="file-tips">
                             <summary>💡 Dúvidas sobre o que enviar? Clique aqui para ver exemplos</summary>
                             <ul>
-                                <li>📦 <strong>Quer instalar um mod novo?</strong> Envie o arquivo <code>.mcpack</code> ou <code>.mcaddon</code> que você baixou da internet.</li>
-                                <li>🌍 <strong>Quer mexer nos mods de um mapa que você já joga?</strong> Envie o arquivo do seu mundo (<code>.mcworld</code>) ou a pasta dele em <code>.zip</code>.</li>
+                                <li>🖥️ <strong>Quer colocar mods no seu servidor EnxadaHost?</strong> Envie todos os arquivos <code>.mcpack</code> ou <code>.mcaddon</code> dos mods que quer colocar no servidor!</li>
+                                <li>🌍 <strong>Quer mexer nos mods de um mapa já existente do servidor?</strong> Envie a pasta do mundo em <code>.zip</code> ou o arquivo <code>.mcworld</code>.</li>
                                 <li>🗜️ <strong>Baixou vários mods de uma vez?</strong> Pode selecionar todos juntos ou enviar um arquivo <code>.zip</code> com todos dentro!</li>
                             </ul>
                         </details>
@@ -107,7 +107,7 @@
             </div>
 
             <div class="progress-section" id="progressSection" style="display: none;">
-                <h3>Processando seus arquivos...</h3>
+                <h3>Processando seus arquivos para o servidor...</h3>
                 <div class="progress-bar">
                     <div class="progress-fill" id="progressFill"></div>
                 </div>
@@ -124,12 +124,12 @@
                 <div class="results-stats" id="resultsStats"></div>
 
                 <div class="results-guide-card">
-                    <h4>💡 O que fazer nesta tela:</h4>
+                    <h4>🖥️ Como aplicar no seu Servidor (EnxadaHost):</h4>
                     <ul>
-                        <li>☑️ <strong>Caixinha marcada em verde:</strong> O mod VAI funcionar no seu jogo ou mapa. Se desmarcar, ele fica desligado.</li>
-                        <li>📥 <strong>Botão "Baixar .mcpack":</strong> Quer instalar apenas esse mod no celular ou PC com 1 clique? Basta clicar nele!</li>
-                        <li>📘 <strong>Behavior Pack (BP):</strong> É o mod de funcionamento (novos monstros, itens, mecânicas, poderes, carros).</li>
-                        <li>🎨 <strong>Resource Pack (RP):</strong> É o mod visual (texturas dos blocos, roupas dos personagens, interface, sons).</li>
+                        <li>📁 <strong>behavior_packs/ e resource_packs/:</strong> Envie para dentro da pasta <code>worlds/Bedrock level/</code> no gerenciador de arquivos da EnxadaHost.</li>
+                        <li>📄 <strong>world_behavior_packs.json e world_resource_packs.json:</strong> Arquivos que ativam os mods automaticamente no servidor. Devem ficar na raiz da pasta do mundo.</li>
+                        <li>🔄 <strong>Reiniciar Servidor:</strong> Sempre clique em "Reiniciar" no painel da EnxadaHost após enviar os arquivos para o servidor carregar os mods!</li>
+                        <li>☑️ <strong>Caixinha marcada:</strong> O mod VAI funcionar no servidor. Se desmarcar, ele fica desligado.</li>
                     </ul>
                 </div>
                 
@@ -145,7 +145,7 @@
                 </div>
                 
                 <div class="activation-section" id="activationSection">
-                    <h3 id="activationTitle">⚙️ Ativar Addons</h3>
+                    <h3 id="activationTitle">⚙️ Ativar Addons no Servidor</h3>
                     <p class="activation-description" id="activationDescription">Selecione quais addons devem ser ativados automaticamente no mundo</p>
                     
                     <div class="packs-activation" id="packsActivation">
@@ -162,18 +162,140 @@
                 </button>
             </div>
 
-            <!-- TUTORIAL 1: O MÉTODO MAIS FÁCIL (INSTALAÇÃO DIRETA) -->
+            <!-- TUTORIAL 1: SERVIDORES (ENXADAHOST) - DESTAQUE PRINCIPAL -->
             <details class="info-section tutorial-section" open>
-                <summary><h3>🌟 O Método Mais Fácil: Instalando Mods Avulsos com 1 Toque (.mcpack / .mcaddon)</h3></summary>
+                <summary><h3>🖥️ TUTORIAL PRINCIPAL: Como Instalar em Servidores Bedrock (EnxadaHost)</h3></summary>
+                <div class="tutorial-content">
+                    <p class="tutorial-intro" style="border-left-color: #667eea; background: rgba(103, 126, 234, 0.15);">
+                        <strong style="color: #a5d6ff;">⭐ USO PRINCIPAL DESTA FERRAMENTA:</strong>
+                        Este instalador foi feito sob medida para quem gerencia servidores de Minecraft Bedrock (especialmente na <strong>EnxadaHost</strong>). Siga o passo a passo abaixo para colocar quantos mods quiser no seu servidor sem erro!
+                    </p>
+
+                    <div class="tutorial-steps">
+                        <div class="tutorial-step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h4>Envie seus addons e baixe o pacote gerado</h4>
+                                <p>Arraste seus mods para a área de upload acima, clique em <strong>"🚀 Passo 2: Processar Addons"</strong> e depois clique no botão verde <strong>"📥 Baixar Addons Organizados"</strong>.</p>
+                                <p>O arquivo <code>.zip</code> baixado conterá tudo pronto e mastigado:</p>
+                                <ul class="file-list">
+                                    <li>📁 <code>behavior_packs/</code> (com todas as pastas de comportamento)</li>
+                                    <li>📁 <code>resource_packs/</code> (com todas as pastas de texturas)</li>
+                                    <li>📄 <code>world_behavior_packs.json</code> (arquivo de ativação obrigatório)</li>
+                                    <li>📄 <code>world_resource_packs.json</code> (arquivo de ativação obrigatório)</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="tutorial-step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h4>Acesse o Gerenciador de Arquivos na EnxadaHost</h4>
+                                <p>Faça login no painel da <strong>EnxadaHost</strong>, selecione o seu servidor e entre na aba <strong>Gerenciador de Arquivos</strong> (ou conecte via programa FTP como FileZilla).</p>
+                            </div>
+                        </div>
+
+                        <div class="tutorial-step">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h4>Abra a pasta do seu mundo no servidor</h4>
+                                <p>No gerenciador de arquivos do servidor, navegue até a pasta do seu mapa:</p>
+                                <div class="code-box">
+                                    <code>worlds/Bedrock level/</code>
+                                </div>
+                                <p class="tip-note"><em>Nota: O nome da pasta padrão é "Bedrock level", a menos que você tenha alterado o campo <code>level-name</code> no seu <code>server.properties</code>.</em></p>
+                            </div>
+                        </div>
+
+                        <div class="tutorial-step">
+                            <div class="step-number">4</div>
+                            <div class="step-content">
+                                <h4>Substitua as pastas e os arquivos de ativação</h4>
+                                <p>Dentro da pasta do mundo (<code>worlds/Bedrock level/</code>):</p>
+                                <ol>
+                                    <li><strong>Apague</strong> as pastas antigas <code>behavior_packs</code> e <code>resource_packs</code> (se já existirem).</li>
+                                    <li><strong>Apague</strong> os arquivos antigos <code>world_behavior_packs.json</code> e <code>world_resource_packs.json</code>.</li>
+                                    <li><strong>Extraia e envie</strong> as novas pastas e os novos arquivos gerados por esta ferramenta para lá dentro!</li>
+                                </ol>
+                            </div>
+                        </div>
+
+                        <div class="tutorial-step">
+                            <div class="step-number">5</div>
+                            <div class="step-content">
+                                <h4>Reinicie o servidor e jogue com a galera!</h4>
+                                <p>Volte ao painel da EnxadaHost e clique no botão <strong>Reiniciar Servidor</strong>. Acompanhe pelo <strong>Console</strong> para ver o Minecraft carregando os mods com sucesso!</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tutorial-tip server-tip">
+                        <span class="tip-icon">💡</span>
+                        <div>
+                            <strong>Dica de Ouro: Como fazer os amigos baixarem as texturas automaticamente</strong>
+                            <p>No arquivo <code>server.properties</code> na raiz do seu servidor, procure a linha:</p>
+                            <code class="path-example">texturepack-required=true</code>
+                            <p class="tip-note">Deixando como <code>true</code>, qualquer pessoa que entrar no seu servidor vai baixar as texturas dos mods direto pelo jogo, sem precisar instalar nada manualmente no celular ou no PC dela!</p>
+                        </div>
+                    </div>
+                </div>
+            </details>
+
+            <!-- TUTORIAL 2: EXPERIMENTOS OBRIGATÓRIOS -->
+            <details class="info-section" open>
+                <summary><h3>⚠️ OBRIGATÓRIO: Como Ativar os "Experimentos" no Servidor / Mundo</h3></summary>
+                <div class="tutorial-content">
+                    <p class="tutorial-intro" style="border-left-color: #f44336; background: rgba(244,67,54,0.12);">
+                        <strong style="color: #ff8a80;">ATENÇÃO MÁXIMA:</strong> 90% das pessoas acham que o mod não funciona ou que veio com defeito porque <strong>esqueceram de ligar os Experimentos</strong>! Quase todo addon moderno precisa dos experimentos ligados no mundo.
+                    </p>
+
+                    <div class="tutorial-steps">
+                        <div class="tutorial-step">
+                            <div class="step-number" style="background: linear-gradient(135deg, #f44336, #e91e63);">1</div>
+                            <div class="step-content">
+                                <h4>No Servidor: Como ligar experimentos no mapa</h4>
+                                <p>A forma mais simples e recomendada é criar ou abrir o seu mundo no Minecraft do Celular ou PC primeiro, ligar os experimentos e depois enviar a pasta do mundo para o servidor.</p>
+                            </div>
+                        </div>
+
+                        <div class="tutorial-step">
+                            <div class="step-number" style="background: linear-gradient(135deg, #f44336, #e91e63);">2</div>
+                            <div class="step-content">
+                                <h4>Nas opções do mundo &gt; Experimentos</h4>
+                                <p>No Minecraft, clique no botão de <strong>Lápis (Editar)</strong> ao lado do mundo &gt; aba <strong>Jogo</strong> &gt; desça até <strong>Experimentos</strong>.</p>
+                            </div>
+                        </div>
+
+                        <div class="tutorial-step">
+                            <div class="step-number" style="background: linear-gradient(135deg, #f44336, #e91e63);">3</div>
+                            <div class="step-content">
+                                <h4>Ative todos os botões de experimentos</h4>
+                                <p>Ligue os seguintes interruptores:</p>
+                                <ul>
+                                    <li>✅ <strong>Recursos de criador de férias</strong> (Holiday Creator Features)</li>
+                                    <li>✅ <strong>Recursos adicionais de modificação</strong> (Additional Modding Capabilities)</li>
+                                    <li>✅ <strong>Próximas funções do criador</strong> (Upcoming Creator Features)</li>
+                                    <li>✅ <strong>Recursos da API Beta</strong> (Beta APIs)</li>
+                                    <li>✅ <strong>Criação de biomas personalizados</strong> (se disponível)</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </details>
+
+            <!-- TUTORIAL 3: MODS AVULSOS NO CELULAR E PC -->
+            <details class="info-section">
+                <summary><h3>🌟 Tutorial: Instalando Mods Avulsos com 1 Toque (.mcpack / .mcaddon)</h3></summary>
                 <div class="tutorial-content">
                     <p class="tutorial-intro">
-                        <strong>Para quem é este tutorial?</strong> Se você baixou um mod avulso da internet e só quer colocá-lo para funcionar no seu celular ou computador sem ter que mexer em pastas complicadas.
+                        <strong>Para quem é este tutorial?</strong> Se você baixou um mod avulso da internet e só quer colocá-lo para funcionar no seu celular ou computador sem mexer em pastas.
                     </p>
 
                     <div class="guide-method-card">
                         <div class="guide-method-header">
                             <h4>📱 No Celular (Android ou iPhone / iPad)</h4>
-                            <span class="tutorial-badge tutorial-badge-easy">Mais Recomendado</span>
+                            <span class="tutorial-badge tutorial-badge-easy">Mais Rápido</span>
                         </div>
                         <ol class="step-content">
                             <li>Na lista de addons acima, clique no botão <strong>📥 Baixar .mcpack</strong> ao lado do mod desejado.</li>
@@ -183,9 +305,8 @@
                             <li>O jogo vai abrir automaticamente e mostrará no topo da tela: <code style="color:#7ee787;">"Importação iniciada... Importação bem-sucedida!"</code>.</li>
                             <li>No menu do Minecraft, clique no botão de <strong>Lápis (Editar)</strong> ao lado do seu mundo:
                                 <ul>
-                                    <li>Vá em <strong>Pacotes de Comportamento</strong> &gt; <em>Disponíveis</em> &gt; clique no mod &gt; <strong>Ativar</strong>.</li>
-                                    <li>Se o mod tiver texturas, vá em <strong>Pacotes de Recursos</strong> &gt; <em>Disponíveis</em> &gt; <strong>Ativar</strong>.</li>
-                                    <li><strong>OBRIGATÓRIO:</strong> Role até <strong>Experimentos</strong> e ative todas as opções (veja o tutorial de experimentos abaixo!).</li>
+                                    <li>Vá em <strong>Pacotes de Comportamento</strong> &gt; <em>Disponíveis</em> &gt; <strong>Ativar</strong>.</li>
+                                    <li>Vá em <strong>Pacotes de Recursos</strong> &gt; <em>Disponíveis</em> &gt; <strong>Ativar</strong>.</li>
                                 </ul>
                             </li>
                         </ol>
@@ -194,20 +315,19 @@
                     <div class="guide-method-card">
                         <div class="guide-method-header">
                             <h4>💻 No Computador (Windows 10 e 11)</h4>
-                            <span class="tutorial-badge tutorial-badge-easy">Instalação com 2 Cliques</span>
+                            <span class="tutorial-badge tutorial-badge-easy">2 Cliques</span>
                         </div>
                         <ol class="step-content">
                             <li>Clique no botão <strong>📥 Baixar .mcpack</strong> ao lado do addon desejado.</li>
                             <li>Abra a pasta <strong>Downloads</strong> do seu computador.</li>
                             <li>Dê <strong>dois cliques rápidos</strong> com o botão esquerdo do mouse no arquivo <code>.mcpack</code>.</li>
                             <li>O Minecraft Bedrock vai abrir sozinho e fazer a instalação automaticamente!</li>
-                            <li>Abra as configurações do seu mundo no jogo, ative o mod e ligue os <strong>Experimentos</strong>.</li>
                         </ol>
                     </div>
                 </div>
             </details>
 
-            <!-- TUTORIAL 2: CELULAR (ANDROID) COM ZARCHIVER -->
+            <!-- TUTORIAL 4: CELULAR (ANDROID) COM ZARCHIVER -->
             <details class="info-section">
                 <summary><h3>📱 Tutorial: Como Colocar Mods na Pasta de um Mundo no Celular (Android)</h3></summary>
                 <div class="tutorial-content">
@@ -220,7 +340,7 @@
                             <div class="step-number">1</div>
                             <div class="step-content">
                                 <h4>Instale o aplicativo ZArchiver</h4>
-                                <p>Abra a Google Play Store no seu celular e instale o aplicativo gratuito <strong>ZArchiver</strong>. Ele é o melhor gerenciador de arquivos para Minecraft no Android.</p>
+                                <p>Abra a Google Play Store no seu celular e instale o aplicativo gratuito <strong>ZArchiver</strong>.</p>
                             </div>
                         </div>
 
@@ -229,7 +349,6 @@
                             <div class="step-content">
                                 <h4>Extraia o arquivo .zip baixado</h4>
                                 <p>Abra o <strong>ZArchiver</strong>, entre na pasta <strong>Download</strong>, dê um toque no arquivo <code>.zip</code> que você baixou aqui e escolha <strong>"Extrair para nome_do_arquivo/"</strong>.</p>
-                                <p>Dentro dessa pasta extraída você verá as pastas <code>behavior_packs</code>, <code>resource_packs</code> e os arquivos <code>world_...json</code>.</p>
                             </div>
                         </div>
 
@@ -249,22 +368,14 @@
                                 <div class="code-box">
                                     <code>Memória interna &gt; Android &gt; data &gt; com.mojang.minecraftpe &gt; files &gt; games &gt; com.mojang &gt; minecraftWorlds</code>
                                 </div>
-                                <p>Entre na pasta do seu mundo (cada pasta é um mundo seu). Se já existirem as pastas <code>behavior_packs</code> e <code>resource_packs</code> lá dentro, <strong>apague as antigas</strong> e toque no botão verde no canto inferior direito para <strong>Colar</strong> as novas!</p>
+                                <p>Entre na pasta do seu mundo, apague as pastas antigas e cole as novas!</p>
                             </div>
-                        </div>
-                    </div>
-
-                    <div class="tutorial-tip mobile-tip">
-                        <span class="tip-icon">ℹ️</span>
-                        <div>
-                            <strong>Dica para Android 13 e 14:</strong>
-                            <p>Se o Android mostrar um aviso dizendo que não tem permissão para acessar a pasta <code>Android/data</code>, não se preocupe: toque em <strong>"Usar esta pasta"</strong> e depois em <strong>"Permitir"</strong>. Isso libera o acesso de uma vez por todas.</p>
                         </div>
                     </div>
                 </div>
             </details>
 
-            <!-- TUTORIAL 3: COMPUTADOR (WINDOWS) -->
+            <!-- TUTORIAL 5: COMPUTADOR (WINDOWS) -->
             <details class="info-section">
                 <summary><h3>💻 Tutorial: Como Colocar Mods na Pasta de um Mundo no Computador (Windows)</h3></summary>
                 <div class="tutorial-content">
@@ -277,16 +388,15 @@
                             <div class="step-number">1</div>
                             <div class="step-content">
                                 <h4>Baixe e extraia o arquivo .zip</h4>
-                                <p>Clique no botão verde <strong>"📥 Baixar Addons Organizados"</strong>. Vá na sua pasta Downloads, clique com o botão direito no arquivo <code>.zip</code> e escolha <strong>"Extrair Tudo"</strong>.</p>
+                                <p>Clique no botão <strong>"📥 Baixar Addons Organizados"</strong> e extraia o arquivo.</p>
                             </div>
                         </div>
 
                         <div class="tutorial-step">
                             <div class="step-number">2</div>
                             <div class="step-content">
-                                <h4>Abra a pasta secreta do Minecraft usando o atalho Win + R</h4>
-                                <p>No teclado do seu computador, aperte as teclas <strong>Windows (a bandeirinha) + R</strong> juntas.</p>
-                                <p>Vai abrir uma janelinha chamada <strong>Executar</strong> no canto da tela. Copie e cole exatamente o comando abaixo dentro dela e aperte <strong>Enter</strong>:</p>
+                                <h4>Abra a pasta do Minecraft usando o atalho Win + R</h4>
+                                <p>No teclado do seu computador, aperte as teclas <strong>Windows + R</strong> juntas. Cole exatamente o comando abaixo e aperte <strong>Enter</strong>:</p>
                                 <div class="code-box">
                                     <code>%localappdata%\Packages\Microsoft.MinecraftUWP_8wekyb3d8bbwe\LocalState\games\com.mojang\minecraftWorlds</code>
                                 </div>
@@ -297,125 +407,7 @@
                             <div class="step-number">3</div>
                             <div class="step-content">
                                 <h4>Substitua os arquivos dentro do seu mundo</h4>
-                                <p>Você verá pastas com nomes de códigos (ex: <code>f8A9sd7=</code>). Cada uma representa um mundo seu. Abra a pasta do mundo que você deseja alterar:</p>
-                                <ol>
-                                    <li><strong>Apague</strong> as pastas antigas <code>behavior_packs</code> e <code>resource_packs</code> (se existirem).</li>
-                                    <li><strong>Apague</strong> os arquivos antigos <code>world_behavior_packs.json</code> e <code>world_resource_packs.json</code>.</li>
-                                    <li><strong>Copie e cole</strong> as novas pastas e arquivos que você extraiu do <code>.zip</code>!</li>
-                                </ol>
-                            </div>
-                        </div>
-
-                        <div class="tutorial-step">
-                            <div class="step-number">4</div>
-                            <div class="step-content">
-                                <h4>Pronto! Abra o Minecraft</h4>
-                                <p>Inicie o Minecraft Bedrock. Seu mundo estará com os mods configurados e ativados. Lembre-se de verificar se os <strong>Experimentos</strong> estão ativados nas opções do mundo!</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </details>
-
-            <!-- TUTORIAL 4: SERVIDORES (EnxadaHost) -->
-            <details class="info-section">
-                <summary><h3>🖥️ Tutorial: Como Instalar em Servidores (EnxadaHost)</h3></summary>
-                <div class="tutorial-content">
-                    <p class="tutorial-intro">
-                        <strong>Para quem é este tutorial?</strong> Para quem tem um servidor de Minecraft Bedrock alugado ou gratuito e quer colocar mods para jogar com os amigos.
-                    </p>
-
-                    <div class="tutorial-steps">
-                        <div class="tutorial-step">
-                            <div class="step-number">1</div>
-                            <div class="step-content">
-                                <h4>Baixe e descompacte o arquivo .zip</h4>
-                                <p>Clique no botão <strong>"📥 Baixar Addons Organizados"</strong> e descompacte o <code>.zip</code> na sua máquina.</p>
-                            </div>
-                        </div>
-
-                        <div class="tutorial-step">
-                            <div class="step-number">2</div>
-                            <div class="step-content">
-                                <h4>Abra o Gerenciador de Arquivos do Servidor</h4>
-                                <p>Acesse o painel da sua hospedagem (EnxadaHost) e clique na aba <strong>Arquivos</strong> (ou conecte via programa FTP como FileZilla).</p>
-                            </div>
-                        </div>
-
-                        <div class="tutorial-step">
-                            <div class="step-number">3</div>
-                            <div class="step-content">
-                                <h4>Entre na pasta do seu mundo</h4>
-                                <p>Navegue até a pasta do seu mapa:</p>
-                                <div class="code-box">
-                                    <code>worlds/Bedrock level/</code>
-                                </div>
-                                <p class="tip-note"><em>Nota: O nome "Bedrock level" é o padrão, mas pode mudar dependendo do campo <code>level-name</code> no seu arquivo <code>server.properties</code>.</em></p>
-                            </div>
-                        </div>
-
-                        <div class="tutorial-step">
-                            <div class="step-number">4</div>
-                            <div class="step-content">
-                                <h4>Substitua os arquivos e pastas</h4>
-                                <p>Dentro da pasta do mundo no servidor:</p>
-                                <ol>
-                                    <li>Delete as pastas <code>behavior_packs</code> e <code>resource_packs</code> antigas.</li>
-                                    <li>Envie as novas pastas <code>behavior_packs</code> e <code>resource_packs</code> geradas pela ferramenta.</li>
-                                    <li>Envie também os arquivos <code>world_behavior_packs.json</code> e <code>world_resource_packs.json</code>.</li>
-                                </ol>
-                            </div>
-                        </div>
-
-                        <div class="tutorial-step">
-                            <div class="step-number">5</div>
-                            <div class="step-content">
-                                <h4>Reinicie o servidor</h4>
-                                <p>Volte ao painel principal e clique no botão <strong>Reiniciar Servidor</strong>. Quando o servidor ligar de novo, os mods estarão funcionando para todos os jogadores!</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </details>
-
-            <!-- TUTORIAL 5: EXPERIMENTOS OBRIGATÓRIOS -->
-            <details class="info-section" open>
-                <summary><h3>⚠️ OBRIGATÓRIO: Como Ativar os "Experimentos" no Minecraft (Evite Erros!)</h3></summary>
-                <div class="tutorial-content">
-                    <p class="tutorial-intro" style="border-left-color: #f44336; background: rgba(244,67,54,0.12);">
-                        <strong style="color: #ff8a80;">ATENÇÃO MÁXIMA:</strong> 90% das pessoas acham que o mod não funciona ou que veio com defeito porque <strong>esqueceram de ligar os Experimentos</strong>! Quase todo addon moderno precisa dos experimentos ligados no mundo.
-                    </p>
-
-                    <div class="tutorial-steps">
-                        <div class="tutorial-step">
-                            <div class="step-number" style="background: linear-gradient(135deg, #f44336, #e91e63);">1</div>
-                            <div class="step-content">
-                                <h4>Vá nas opções do seu mundo</h4>
-                                <p>Na tela inicial do Minecraft, clique em <strong>Jogar</strong>. Ao lado do mundo em que você quer jogar, clique no ícone do <strong>Lápis (Editar)</strong>.</p>
-                            </div>
-                        </div>
-
-                        <div class="tutorial-step">
-                            <div class="step-number" style="background: linear-gradient(135deg, #f44336, #e91e63);">2</div>
-                            <div class="step-content">
-                                <h4>Desça até a seção "Experimentos"</h4>
-                                <p>No menu do lado esquerdo, certifique-se de que está na aba <strong>Jogo</strong>. Role a tela do lado direito para baixo até encontrar a categoria <strong>Experimentos</strong>.</p>
-                            </div>
-                        </div>
-
-                        <div class="tutorial-step">
-                            <div class="step-number" style="background: linear-gradient(135deg, #f44336, #e91e63);">3</div>
-                            <div class="step-content">
-                                <h4>Ative todos os botões de experimentos</h4>
-                                <p>Ligue os seguintes interruptores (se o jogo perguntar se tem certeza, clique em <strong>"Ativar experimentos mesmo assim"</strong>):</p>
-                                <ul>
-                                    <li>✅ <strong>Recursos de criador de férias</strong> (Holiday Creator Features)</li>
-                                    <li>✅ <strong>Recursos adicionais de modificação</strong> (Additional Modding Capabilities)</li>
-                                    <li>✅ <strong>Próximas funções do criador</strong> (Upcoming Creator Features)</li>
-                                    <li>✅ <strong>Recursos da API Beta</strong> (Beta APIs)</li>
-                                    <li>✅ <strong>Criação de biomas personalizados</strong> (se disponível)</li>
-                                </ul>
-                                <p>O jogo criará automaticamente uma cópia segura do seu mundo chamada <em>"Cópia de [Nome do mundo]"</em> com os experimentos ligados. Jogue nessa cópia!</p>
+                                <p>Abra a pasta do seu mundo, apague as pastas antigas <code>behavior_packs</code> e <code>resource_packs</code> e cole as novas pastas e arquivos <code>world_...json</code>!</p>
                             </div>
                         </div>
                     </div>
@@ -426,6 +418,20 @@
             <details class="info-section">
                 <summary><h3>❓ Dúvidas e Problemas Frequentes (FAQ)</h3></summary>
                 <div class="faq-block">
+                    <div class="faq-item">
+                        <h4>Onde fica a pasta do mundo no servidor da EnxadaHost?</h4>
+                        <p>
+                            Ela fica em <code>worlds/Bedrock level/</code>. É exatamente dentro dessa pasta que você deve colar as pastas <code>behavior_packs/</code> e <code>resource_packs/</code>, além dos dois arquivos <code>world_behavior_packs.json</code> e <code>world_resource_packs.json</code>.
+                        </p>
+                    </div>
+
+                    <div class="faq-item">
+                        <h4>Os jogadores precisam instalar os mods no celular/PC deles para jogar no servidor?</h4>
+                        <p>
+                            <strong>Não obrigatoriamente!</strong> Se você deixar <code>texturepack-required=true</code> no seu arquivo <code>server.properties</code> na EnxadaHost, o próprio servidor baixa e carrega as texturas e modelos nos celulares e PCs dos seus amigos automaticamente quando eles conectam.
+                        </p>
+                    </div>
+
                     <div class="faq-item">
                         <h4>O que é Behavior Pack (BP) e Resource Pack (RP)?</h4>
                         <p>
@@ -438,30 +444,21 @@
                     <div class="faq-item">
                         <h4>Por que os blocos ou itens do meu mod estão invisíveis ou roxos e pretos?</h4>
                         <p>
-                            Isso acontece quando o Minecraft carregou o <strong>Behavior Pack</strong> (a função do item), mas faltou carregar o <strong>Resource Pack</strong> (a textura visual). 
-                            Certifique-se de que o Resource Pack correspondente está marcado e ativado nas configurações do seu mundo!
+                            Isso acontece quando o Minecraft carregou o <strong>Behavior Pack</strong> (a função do item), mas faltou carregar o <strong>Resource Pack</strong> (a textura visual), ou você esqueceu de ligar os <strong>Experimentos</strong>.
                         </p>
                     </div>
 
                     <div class="faq-item">
                         <h4>O que significa "Manifest corrompido / incompleto"?</h4>
                         <p>
-                            O arquivo <code>manifest.json</code> é a "certidão de nascimento" do mod, onde diz o nome dele e o código de identidade (UUID). 
-                            Muitos criadores de mods cometem erros de digitação nesse arquivo. Quando isso acontece, o instalador limpa os erros e cria uma correção automática para você não perder o mod!
-                        </p>
-                    </div>
-
-                    <div class="faq-item">
-                        <h4>Posso perder minhas construções no mundo ao usar esta ferramenta?</h4>
-                        <p>
-                            <strong>Não!</strong> Esta ferramenta mexe única e exclusivamente nos arquivos de mods (Behavior e Resource Packs) e nos arquivos de ativação. Ela <strong>nunca altera nem apaga</strong> suas construções, baús ou terrenos. Mesmo assim, <em>sempre guarde uma cópia de segurança (backup)</em> do seu mundo por precaução.
+                            O arquivo <code>manifest.json</code> é a "certidão de nascimento" do mod. Muitos criadores cometem erros de digitação nesse arquivo. Quando isso acontece, o instalador limpa os erros e cria uma correção automática para o servidor conseguir carregar o mod sem crashar.
                         </p>
                     </div>
 
                     <div class="faq-item">
                         <h4>O instalador envia meus arquivos para a internet?</h4>
                         <p>
-                            <strong>Não!</strong> Todo o processamento é feito 100% no seu próprio computador ou celular, direto no seu navegador. Nenhum arquivo seu é enviado para servidores externos, garantindo privacidade e velocidade máxima mesmo com arquivos gigantes.
+                            <strong>Não!</strong> Todo o processamento é feito 100% no seu próprio computador ou celular, direto no seu navegador. Nenhum arquivo seu é enviado para servidores externos.
                         </p>
                     </div>
                 </div>
