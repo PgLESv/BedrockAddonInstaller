@@ -259,33 +259,33 @@
       ...state.processedAddons.unknownPacks
     ].filter((p) => p.hasCorruptedManifest).length;
     if (state.worldMode && state.worldData) {
-      elements.resultsTitle.textContent = "\u{1F30D} Gerenciamento de Mundo";
+      elements.resultsTitle.textContent = "\u{1F30D} Mapa do Minecraft Carregado com Sucesso!";
       elements.worldInfo.style.display = "block";
       elements.worldName.textContent = state.worldData.name;
       elements.worldManagement.style.display = "block";
-      elements.downloadBtnText.textContent = "\u{1F4E5} Baixar Apenas Addons (sem o mapa)";
-      elements.activationTitle.textContent = "\u2699\uFE0F Gerenciar Addons do Mundo";
-      elements.activationDescription.textContent = "Marque os addons que deseja manter ativos. Desmarcados ser\xE3o removidos da ativa\xE7\xE3o.";
+      elements.downloadBtnText.textContent = "\u{1F4E5} Baixar Pastas dos Addons (Pronto para Colar no seu Mundo)";
+      elements.activationTitle.textContent = "\u2699\uFE0F Escolha quais Addons devem Funcionar no seu Mundo";
+      elements.activationDescription.textContent = "\u2705 Caixinha marcada = Mod ligado e funcionando. \u274C Caixinha desmarcada = Mod desligado no mundo.";
     } else {
-      elements.resultsTitle.textContent = "\u2705 Processamento Conclu\xEDdo!";
+      elements.resultsTitle.textContent = "\u2705 Addons Identificados e Organizados!";
       elements.worldInfo.style.display = "none";
       elements.worldManagement.style.display = "none";
-      elements.downloadBtnText.textContent = "\u{1F4E5} Baixar Addons Organizados";
-      elements.activationTitle.textContent = "\u2699\uFE0F Ativar Addons";
-      elements.activationDescription.textContent = "Selecione quais addons devem ser ativados automaticamente no mundo";
+      elements.downloadBtnText.textContent = "\u{1F4E5} Baixar Pacote Completo Organizado (.zip)";
+      elements.activationTitle.textContent = "\u2699\uFE0F Ativa\xE7\xE3o e Sele\xE7\xE3o dos Addons";
+      elements.activationDescription.textContent = "Marque quais mods voc\xEA deseja deixar ativos no jogo. Voc\xEA tamb\xE9m pode baixar qualquer mod individualmente clicando no bot\xE3o \u{1F4E5} Baixar .mcpack!";
     }
     let statsHTML = `
         <div class="stat-card">
             <h4>${totalAddons}</h4>
-            <p>Total de Addons</p>
+            <p>Total de Mods</p>
         </div>
         <div class="stat-card">
             <h4>${totalBehavior}</h4>
-            <p>Behavior Packs</p>
+            <p>Behavior Packs (Comportamento)</p>
         </div>
         <div class="stat-card">
             <h4>${totalResource}</h4>
-            <p>Resource Packs</p>
+            <p>Resource Packs (Texturas)</p>
         </div>
         <div class="stat-card">
             <h4>${formatFileSize(totalSize)}</h4>
@@ -296,7 +296,7 @@
       statsHTML += `
         <div class="stat-card unknown-stat">
             <h4>${totalUnknown}</h4>
-            <p>Packs Desconhecidos</p>
+            <p>Mods a Classificar</p>
         </div>
         `;
     }
@@ -304,7 +304,7 @@
       statsHTML += `
         <div class="stat-card" style="border-left-color: #ff9800;">
             <h4 style="color: #ff9800;">${corruptedCount}</h4>
-            <p>Com Manifest Inv\xE1lido</p>
+            <p>Com Erro no Manifest (Corrigidos)</p>
         </div>
         `;
     }
@@ -335,22 +335,22 @@
         <div class="activation-alerts">
             ${corruptedPacks.length > 0 ? `
             <div class="alert warning">
-                <strong>\u26A0\uFE0F Aviso:</strong> ${corruptedPacks.length} pack(s) com manifest corrompido ou incompleto.
-                <span class="hint">Voc\xEA pode editar UUID/Vers\xE3o nos itens indicados.</span>
+                <strong>\u26A0\uFE0F Aten\xE7\xE3o:</strong> ${corruptedPacks.length} mod(s) vieram com o arquivo interno (manifest) com erro de cria\xE7\xE3o.
+                <span class="hint">O instalador gerou uma corre\xE7\xE3o b\xE1sica autom\xE1tica. Se necess\xE1rio, clique em "\u270F\uFE0F Corrigir UUID/Vers\xE3o".</span>
             </div>` : ""}
             ${duplicateSets.length > 0 ? `
             <div class="alert info">
-                <strong>\u2139\uFE0F Duplicados detectados:</strong> ${duplicateSets.length} grupo(s) de addons com mesmo UUID/nome.
-                <button class="btn-secondary small btn-dedupe" id="btnDedupeAction">Ativar apenas 1 por grupo</button>
+                <strong>\u2139\uFE0F Mods repetidos detectados:</strong> Encontramos ${duplicateSets.length} grupo(s) de addons repetidos (mesmo c\xF3digo ou nome). Se voc\xEA deixar dois iguais ligados, o Minecraft pode travar!
+                <button class="btn-secondary small btn-dedupe" id="btnDedupeAction">\u26A1 Resolver Autom\xE1tico: Ligar s\xF3 1 por grupo</button>
                 ${state.uiFeedback?.dedupe ? `
-                <span class="dupe-status">Aplicado: ${state.uiFeedback.dedupe.changed} pack(s) desativado(s) em ${state.uiFeedback.dedupe.groups} grupo(s)</span>
+                <span class="dupe-status">Aplicado: ${state.uiFeedback.dedupe.changed} c\xF3pia(s) desativada(s) em ${state.uiFeedback.dedupe.groups} grupo(s)</span>
                 ` : ""}
             </div>` : ""}
             ${duplicateSets.length > 0 ? `
             <div class="dupe-resolver">
-                <div class="dupe-resolver-title">Resolver duplicados manualmente</div>
+                <div class="dupe-resolver-title">Ou escolha manualmente qual vers\xE3o voc\xEA quer manter ligada:</div>
                 ${Object.entries(dupGroups).filter(([, arr]) => arr.length > 1).map(([key, arr], idx) => {
-        const readableKey = key.startsWith("no-uuid:") ? "Sem UUID" : key;
+        const readableKey = key.startsWith("no-uuid:") ? "Sem Identificador UUID" : key;
         let activeIdx = state.duplicateSelection && state.duplicateSelection[key] !== void 0 ? state.duplicateSelection[key] : void 0;
         if (activeIdx === void 0) {
           let activeCount = 0;
@@ -378,19 +378,19 @@
         return `<div class="dupe-group">
                                 <div class="dupe-group-header">
                                     <span class="dupe-key">Grupo ${idx + 1}: ${escapeHtml(readableKey)}</span>
-                                    <span class="dupe-count">(${arr.length} itens)</span>
+                                    <span class="dupe-count">(${arr.length} c\xF3pias)</span>
                                 </div>
                                 <div class="dupe-options">
                                     ${optionsHTML}
                                     <label class="dupe-option">
                                         <input type="radio" name="dupe_grp_${idx}" id="dupe_${idx}_none" value="__none" ${activeIdx === -1 ? "checked" : ""}
                                             data-group-key="${escapeHtml(key)}" class="dupe-radio-none">
-                                        <span>Nenhum</span>
+                                        <span>\u274C Desligar Todos</span>
                                     </label>
                                     <label class="dupe-option">
                                         <input type="radio" name="dupe_grp_${idx}" id="dupe_${idx}_both" value="__both" ${activeIdx === -2 ? "checked" : ""}
                                             data-group-key="${escapeHtml(key)}" class="dupe-radio-both">
-                                        <span>Ambos</span>
+                                        <span>\u26A0\uFE0F Manter Ambos (Pode dar erro no jogo)</span>
                                     </label>
                                 </div>
                             </div>`;
@@ -405,8 +405,8 @@
                 <h4>${title}</h4>
                 ${typeKey === "unknown" ? `
                 <p class="unknown-packs-description">
-                    Estes packs n\xE3o puderam ser identificados automaticamente. 
-                    ${packs.some((p) => p.fromWorld) ? "Packs do mundo ser\xE3o mantidos na pasta original." : "Selecione o tipo para cada pack."}
+                    Estes arquivos n\xE3o possuem informa\xE7\xE3o clara se s\xE3o de textura ou de comportamento. 
+                    ${packs.some((p) => p.fromWorld) ? "Packs do mundo ser\xE3o mantidos na pasta original." : "Por favor, selecione abaixo se este mod adiciona fun\xE7\xF5es (Behavior) ou visual (Resource):"}
                 </p>` : ""}
                 <div class="packs-list">
         `;
@@ -418,8 +418,8 @@
         }
         const isChecked = targetState[pack._id];
         const fromWorld = pack.fromWorld ? " \u{1F30D}" : typeKey === "unknown" ? " \u2753" : " \u2728";
-        const originLabel = pack.fromWorld ? typeKey === "unknown" ? "Do Mundo (pasta original)" : "Do Mundo" : typeKey === "unknown" ? "Novo (precisa categoriza\xE7\xE3o)" : "Novo";
-        const corruptedWarning = pack.hasCorruptedManifest ? ' <span class="corrupted-badge" title="Manifest corrompido">\u26A0\uFE0F</span>' : "";
+        const originLabel = pack.fromWorld ? typeKey === "unknown" ? "Do Mundo (pasta original)" : "J\xE1 estava no Mundo" : typeKey === "unknown" ? "Novo (selecione tipo abaixo)" : "Novo Mod Adicionado";
+        const corruptedWarning = pack.hasCorruptedManifest ? ' <span class="corrupted-badge" title="Manifest corrompido ou corrigido">\u26A0\uFE0F</span>' : "";
         let valBadgeHTML = "";
         let valDetailsHTML = "";
         if (pack.validation) {
@@ -434,7 +434,7 @@
             valDetailsHTML = `
                     <details class="validation-details ${hasErrors ? "has-errors" : ""}">
                         <summary class="validation-summary ${hasErrors ? "has-errors" : "has-warnings"}">
-                            ${hasErrors ? `\u274C Problemas de schema no manifest (${pack.validation.errors.length})` : `\u26A0\uFE0F Avisos de compatibilidade (${pack.validation.warnings.length})`}
+                            ${hasErrors ? `\u274C Detalhes dos erros no arquivo manifest do mod (${pack.validation.errors.length})` : `\u26A0\uFE0F Detalhes dos avisos de compatibilidade (${pack.validation.warnings.length})`}
                         </summary>
                         <ul class="validation-list">
                             ${pack.validation.errors.map((err) => `<li class="val-err">${escapeHtml(err)}</li>`).join("")}
@@ -455,13 +455,13 @@
                                    class="pack-activation-check"
                                    ${isChecked ? "checked" : ""}>
                             <span class="pack-name">${fromWorld} ${escapeHtml(pack.name)}${corruptedWarning} <span class="chip ${chipClass}">${chipLabel}</span>${valBadgeHTML}</span>
-                            <span class="pack-uuid">UUID: ${escapeHtml(pack.manifest?.header?.uuid || "Sem UUID")}</span>
+                            <span class="pack-uuid">Identificador: ${escapeHtml(pack.manifest?.header?.uuid || "Sem UUID")}</span>
                             <span class="pack-origin">${originLabel}</span>
                         </label>
                         <div class="pack-actions">
                             ${(!pack.manifest?.header?.uuid || !Array.isArray(pack.manifest?.header?.version)) && (!pack.fromWorld || typeKey !== "unknown") ? `
-                            <button type="button" class="btn-inline btn-toggle-edit" data-editor-id="editor_${packDomId}" title="Editar UUID/Vers\xE3o">\u270F\uFE0F UUID/Vers\xE3o</button>` : ""}
-                            <button type="button" class="btn-inline btn-download-pack" data-pack-id="${pack._id}" title="Baixar este addon como .mcpack individual">\u{1F4E5} .mcpack</button>
+                            <button type="button" class="btn-inline btn-toggle-edit" data-editor-id="editor_${packDomId}" title="Editar c\xF3digo UUID ou Vers\xE3o manualmente">\u270F\uFE0F Corrigir UUID/Vers\xE3o</button>` : ""}
+                            <button type="button" class="btn-inline btn-download-pack" data-pack-id="${pack._id}" title="Baixar este mod individual em formato .mcpack (basta 1 clique para instalar no celular ou PC)">\u{1F4E5} Baixar .mcpack</button>
                         </div>
                     </div>
                     ${valDetailsHTML}
@@ -474,17 +474,17 @@
                             <label>Vers\xE3o</label>
                             <input type="text" id="version_${packDomId}" value="${escapeHtml(Array.isArray(pack.manifest?.header?.version) ? pack.manifest.header.version.join(".") : "")}" placeholder="1.0.0" />
                         </div>
-                        <button type="button" class="btn-success btn-inline btn-save-essentials" data-pack-dom-id="${packDomId}" data-pack-type="${typeKey}" data-internal-id="${pack._id}">Salvar</button>
+                        <button type="button" class="btn-success btn-inline btn-save-essentials" data-pack-dom-id="${packDomId}" data-pack-type="${typeKey}" data-internal-id="${pack._id}">\u{1F4BE} Salvar Corre\xE7\xE3o</button>
                     </div>
             `;
         if (typeKey === "unknown" && !pack.fromWorld && pack.needsCategory) {
           section += `
                     <div class="category-selector">
-                        <label for="category_${packDomId}">Categorizar como:</label>
+                        <label for="category_${packDomId}">Este mod \xE9 de Comportamento ou Textura?</label>
                         <select id="category_${packDomId}" data-pack-index="${index}" class="select-category">
-                            <option value="">-- Selecione --</option>
-                            <option value="behavior">Behavior Pack</option>
-                            <option value="resource">Resource Pack</option>
+                            <option value="">-- Clique aqui para escolher --</option>
+                            <option value="behavior">\u{1F4D8} Behavior Pack (C\xF3digo / Criaturas / Itens)</option>
+                            <option value="resource">\u{1F3A8} Resource Pack (Texturas / Visual / Sons)</option>
                         </select>
                     </div>
                 `;
@@ -494,9 +494,9 @@
       section += `</div></div>`;
       return section;
     }
-    html += renderPackGroup("behavior", "\u{1F4D8} Behavior Packs", state.processedAddons.behaviorPacks, "bp", "BP");
-    html += renderPackGroup("resource", "\u{1F3A8} Resource Packs", state.processedAddons.resourcePacks, "rp", "RP");
-    html += renderPackGroup("unknown", "\u2753 Packs Desconhecidos", state.processedAddons.unknownPacks, "unk", "?");
+    html += renderPackGroup("behavior", "\u{1F4D8} Behavior Packs (Comportamento / Criaturas / Itens)", state.processedAddons.behaviorPacks, "bp", "BP (Comportamento)");
+    html += renderPackGroup("resource", "\u{1F3A8} Resource Packs (Texturas / Visual / Sons)", state.processedAddons.resourcePacks, "rp", "RP (Textura)");
+    html += renderPackGroup("unknown", "\u2753 Mods que precisam de classifica\xE7\xE3o", state.processedAddons.unknownPacks, "unk", "? (Classificar)");
     if (html === "") {
       html = '<p class="no-packs">Nenhum addon processado.</p>';
     }
@@ -772,43 +772,43 @@
     }
     const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
     if (!manifest.header || typeof manifest.header !== "object") {
-      errors.push('Bloco "header" ausente ou inv\xE1lido.');
+      errors.push('Bloco "header" ausente ou inv\xE1lido no manifest (o arquivo de registro do mod n\xE3o possui cabe\xE7alho).');
     } else {
       const header = manifest.header;
       if (!header.name) {
-        errors.push('Nome do pacote ("header.name") ausente.');
+        errors.push('Nome do pacote ("header.name") ausente (o mod est\xE1 sem nome no manifest).');
       }
       if (!header.uuid) {
-        errors.push('UUID do pacote ("header.uuid") ausente.');
+        errors.push('UUID do pacote ("header.uuid") ausente (o c\xF3digo de identidade do mod n\xE3o foi encontrado).');
       } else if (!uuidRegex.test(header.uuid)) {
-        errors.push("UUID do cabe\xE7alho inv\xE1lido. Deve ser no formato 8-4-4-4-12.");
+        errors.push("UUID do cabe\xE7alho inv\xE1lido. O c\xF3digo de identifica\xE7\xE3o do mod deve estar no formato 8-4-4-4-12 (ex: 12345678-1234-1234-1234-123456789abc).");
       }
       if (!header.version) {
-        errors.push('Vers\xE3o ("header.version") ausente.');
+        errors.push('Vers\xE3o ("header.version") ausente no manifest.');
       } else if (!Array.isArray(header.version) || header.version.length !== 3 || header.version.some((n) => typeof n !== "number" || isNaN(n) || n < 0)) {
-        errors.push("Vers\xE3o inv\xE1lida. Deve ser um array de 3 n\xFAmeros inteiros [major, minor, patch].");
+        errors.push("Vers\xE3o inv\xE1lida. O Minecraft exige que a vers\xE3o seja uma lista com 3 n\xFAmeros inteiros [ex: 1, 0, 0].");
       }
       if (!header.min_engine_version) {
-        warnings.push('"min_engine_version" ausente no header (recomendado para Bedrock 1.14+).');
+        warnings.push('"min_engine_version" ausente no header (indica para qual vers\xE3o do Minecraft o mod foi feito).');
       } else if (!Array.isArray(header.min_engine_version) || header.min_engine_version.length !== 3) {
-        warnings.push('"min_engine_version" deve ser um array de 3 n\xFAmeros [ex: 1, 20, 0].');
+        warnings.push('"min_engine_version" deve ser uma lista com 3 n\xFAmeros [ex: 1, 20, 0].');
       }
     }
     if (!manifest.modules) {
-      errors.push('Bloco "modules" ausente.');
+      errors.push('Bloco "modules" ausente (o mod precisa declarar pelo menos um m\xF3dulo de c\xF3digo ou textura).');
     } else if (!Array.isArray(manifest.modules) || manifest.modules.length === 0) {
       errors.push('"modules" deve ser uma lista com pelo menos 1 m\xF3dulo definido.');
     } else {
       manifest.modules.forEach((mod, idx) => {
         if (!mod.type) {
-          errors.push(`M\xF3dulo ${idx + 1} sem campo "type".`);
+          errors.push(`M\xF3dulo ${idx + 1} sem campo "type" (o jogo n\xE3o sabe se este m\xF3dulo \xE9 de comportamento ou textura).`);
         }
         if (!mod.uuid) {
-          warnings.push(`M\xF3dulo ${idx + 1} sem "uuid" pr\xF3prio.`);
+          warnings.push(`M\xF3dulo ${idx + 1} sem "uuid" pr\xF3prio (recomendado ter identificador \xFAnico).`);
         } else if (!uuidRegex.test(mod.uuid)) {
-          warnings.push(`UUID do m\xF3dulo ${idx + 1} \xE9 inv\xE1lido.`);
+          warnings.push(`UUID do m\xF3dulo ${idx + 1} \xE9 inv\xE1lido (formato de c\xF3digo incorreto).`);
         } else if (manifest.header?.uuid && mod.uuid.toLowerCase() === manifest.header.uuid.toLowerCase()) {
-          errors.push(`UUID do m\xF3dulo ${idx + 1} \xE9 id\xEAntico ao UUID do header (deve ser \xFAnico!).`);
+          errors.push(`UUID do m\xF3dulo ${idx + 1} \xE9 id\xEAntico ao UUID do header (cada parte do mod precisa de um c\xF3digo diferente, sen\xE3o o jogo n\xE3o carrega!).`);
         }
       });
     }
@@ -1370,25 +1370,25 @@
   function validateFile(file) {
     const errors = [];
     if (file.size > CONFIG.MAX_FILE_SIZE) {
-      errors.push(`Arquivo muito grande`);
+      errors.push(`Arquivo muito grande (tamanho m\xE1ximo suportado: 500 MB).`);
     }
     if (file.size === 0) {
-      errors.push("Arquivo vazio");
+      errors.push("O arquivo selecionado est\xE1 vazio (tamanho 0 bytes).");
     }
     const fileName = file.name.toLowerCase();
     const extension = fileName.substring(fileName.lastIndexOf("."));
     const isTarGz = fileName.endsWith(".tar.gz");
     const isValid = CONFIG.SUPPORTED_EXTENSIONS.includes(extension) || isTarGz;
     if (extension === ".rar" || extension === ".7z") {
-      errors.push(`${extension} n\xE3o \xE9 suportado no navegador. Extraia e envie como .zip ou .mcpack`);
+      errors.push(`Arquivos ${extension} n\xE3o abrem direto no navegador. Extraia o conte\xFAdo antes usando o app ZArchiver (no celular) ou WinRAR (no PC) e envie como .zip ou .mcpack.`);
     } else if (!isValid) {
-      errors.push(`Extens\xE3o n\xE3o suportada: ${extension}`);
+      errors.push(`Formato n\xE3o suportado: ${extension}. Envie apenas arquivos .mcpack, .mcaddon, .mcworld ou .zip.`);
     }
     return { valid: errors.length === 0, errors };
   }
   async function addFiles(files) {
     if (state.uploadedFiles.length + files.length > CONFIG.MAX_FILES) {
-      showToast(`\u26A0\uFE0F M\xE1ximo de ${CONFIG.MAX_FILES} arquivos por vez`, "error");
+      showToast(`\u26A0\uFE0F Voc\xEA pode enviar no m\xE1ximo ${CONFIG.MAX_FILES} arquivos por vez`, "error");
       return;
     }
     let addedCount = 0;
@@ -1416,7 +1416,7 @@
       if (isWorld) {
         state.uploadedFiles = [file];
         state.worldMode = true;
-        showToast("\u{1F30D} Mundo detectado!", "success");
+        showToast("\u{1F30D} Mapa do Minecraft detectado com sucesso!", "success");
         addedCount = 1;
         break;
       } else {
@@ -1429,9 +1429,9 @@
     }
     if (addedCount > 0) {
       const count = state.uploadedFiles.length;
-      showToast(`\u2705 ${count} arquivo${count > 1 ? "s" : ""} pronto${count > 1 ? "s" : ""}`, "success", 2e3);
+      showToast(`\u2705 ${count} arquivo(s) carregado(s)! Agora clique no bot\xE3o verde "Passo 2: Processar Addons".`, "success", 3500);
     } else if (errorCount > 0) {
-      showToast(`\u274C ${errorCount} arquivo${errorCount > 1 ? "s" : ""} com erro`, "error");
+      showToast(`\u274C ${errorCount} arquivo(s) com erro. Veja as mensagens acima.`, "error");
     }
     renderFilesList();
     updateActionsVisibility();
@@ -1458,22 +1458,22 @@
     try {
       const totalFiles = state.uploadedFiles.length;
       if (state.worldMode && totalFiles === 1) {
-        updateProgress(25, "Detectado mundo, analisando conte\xFAdo...");
+        updateProgress(25, "Lendo o mapa do Minecraft e procurando addons...");
         await processWorld(state.uploadedFiles[0]);
-        updateProgress(100, "Mundo carregado!");
+        updateProgress(100, "Mapa carregado com sucesso!");
       } else {
         for (let i = 0; i < totalFiles; i++) {
           const file = state.uploadedFiles[i];
           const progress = (i + 1) / totalFiles * 100;
-          updateProgress(progress, `Processando ${file.name}...`);
+          updateProgress(progress, `Processando arquivo ${i + 1} de ${totalFiles}: ${file.name}...`);
           await processAddonFile(file);
         }
-        updateProgress(100, "Conclu\xEDdo!");
+        updateProgress(100, "Todos os addons foram processados com sucesso!");
       }
       showResults();
     } catch (error) {
       console.error("Erro ao processar addons:", error);
-      showToast(`\u274C Erro: ${error.message}`, "error", 5e3);
+      showToast(`\u274C Ocorreu um erro ao processar: ${error.message}`, "error", 5e3);
       hapticFeedback("error");
       elements.progressSection.style.display = "none";
       elements.actions.style.display = "flex";

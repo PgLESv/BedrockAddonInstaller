@@ -70,34 +70,34 @@ export function showResults() {
     ].filter(p => p.hasCorruptedManifest).length;
 
     if (state.worldMode && state.worldData) {
-        elements.resultsTitle.textContent = '🌍 Gerenciamento de Mundo';
+        elements.resultsTitle.textContent = '🌍 Mapa do Minecraft Carregado com Sucesso!';
         elements.worldInfo.style.display = 'block';
         elements.worldName.textContent = state.worldData.name;
         elements.worldManagement.style.display = 'block';
-        elements.downloadBtnText.textContent = '📥 Baixar Apenas Addons (sem o mapa)';
-        elements.activationTitle.textContent = '⚙️ Gerenciar Addons do Mundo';
-        elements.activationDescription.textContent = 'Marque os addons que deseja manter ativos. Desmarcados serão removidos da ativação.';
+        elements.downloadBtnText.textContent = '📥 Baixar Pastas dos Addons (Pronto para Colar no seu Mundo)';
+        elements.activationTitle.textContent = '⚙️ Escolha quais Addons devem Funcionar no seu Mundo';
+        elements.activationDescription.textContent = '✅ Caixinha marcada = Mod ligado e funcionando. ❌ Caixinha desmarcada = Mod desligado no mundo.';
     } else {
-        elements.resultsTitle.textContent = '✅ Processamento Concluído!';
+        elements.resultsTitle.textContent = '✅ Addons Identificados e Organizados!';
         elements.worldInfo.style.display = 'none';
         elements.worldManagement.style.display = 'none';
-        elements.downloadBtnText.textContent = '📥 Baixar Addons Organizados';
-        elements.activationTitle.textContent = '⚙️ Ativar Addons';
-        elements.activationDescription.textContent = 'Selecione quais addons devem ser ativados automaticamente no mundo';
+        elements.downloadBtnText.textContent = '📥 Baixar Pacote Completo Organizado (.zip)';
+        elements.activationTitle.textContent = '⚙️ Ativação e Seleção dos Addons';
+        elements.activationDescription.textContent = 'Marque quais mods você deseja deixar ativos no jogo. Você também pode baixar qualquer mod individualmente clicando no botão 📥 Baixar .mcpack!';
     }
 
     let statsHTML = `
         <div class="stat-card">
             <h4>${totalAddons}</h4>
-            <p>Total de Addons</p>
+            <p>Total de Mods</p>
         </div>
         <div class="stat-card">
             <h4>${totalBehavior}</h4>
-            <p>Behavior Packs</p>
+            <p>Behavior Packs (Comportamento)</p>
         </div>
         <div class="stat-card">
             <h4>${totalResource}</h4>
-            <p>Resource Packs</p>
+            <p>Resource Packs (Texturas)</p>
         </div>
         <div class="stat-card">
             <h4>${formatFileSize(totalSize)}</h4>
@@ -109,7 +109,7 @@ export function showResults() {
         statsHTML += `
         <div class="stat-card unknown-stat">
             <h4>${totalUnknown}</h4>
-            <p>Packs Desconhecidos</p>
+            <p>Mods a Classificar</p>
         </div>
         `;
     }
@@ -118,7 +118,7 @@ export function showResults() {
         statsHTML += `
         <div class="stat-card" style="border-left-color: #ff9800;">
             <h4 style="color: #ff9800;">${corruptedCount}</h4>
-            <p>Com Manifest Inválido</p>
+            <p>Com Erro no Manifest (Corrigidos)</p>
         </div>
         `;
     }
@@ -154,24 +154,24 @@ export function renderActivationOptions() {
         <div class="activation-alerts">
             ${corruptedPacks.length > 0 ? `
             <div class="alert warning">
-                <strong>⚠️ Aviso:</strong> ${corruptedPacks.length} pack(s) com manifest corrompido ou incompleto.
-                <span class="hint">Você pode editar UUID/Versão nos itens indicados.</span>
+                <strong>⚠️ Atenção:</strong> ${corruptedPacks.length} mod(s) vieram com o arquivo interno (manifest) com erro de criação.
+                <span class="hint">O instalador gerou uma correção básica automática. Se necessário, clique em "✏️ Corrigir UUID/Versão".</span>
             </div>` : ''}
             ${duplicateSets.length > 0 ? `
             <div class="alert info">
-                <strong>ℹ️ Duplicados detectados:</strong> ${duplicateSets.length} grupo(s) de addons com mesmo UUID/nome.
-                <button class="btn-secondary small btn-dedupe" id="btnDedupeAction">Ativar apenas 1 por grupo</button>
+                <strong>ℹ️ Mods repetidos detectados:</strong> Encontramos ${duplicateSets.length} grupo(s) de addons repetidos (mesmo código ou nome). Se você deixar dois iguais ligados, o Minecraft pode travar!
+                <button class="btn-secondary small btn-dedupe" id="btnDedupeAction">⚡ Resolver Automático: Ligar só 1 por grupo</button>
                 ${state.uiFeedback?.dedupe ? `
-                <span class="dupe-status">Aplicado: ${state.uiFeedback.dedupe.changed} pack(s) desativado(s) em ${state.uiFeedback.dedupe.groups} grupo(s)</span>
+                <span class="dupe-status">Aplicado: ${state.uiFeedback.dedupe.changed} cópia(s) desativada(s) em ${state.uiFeedback.dedupe.groups} grupo(s)</span>
                 ` : ''}
             </div>` : ''}
             ${duplicateSets.length > 0 ? `
             <div class="dupe-resolver">
-                <div class="dupe-resolver-title">Resolver duplicados manualmente</div>
+                <div class="dupe-resolver-title">Ou escolha manualmente qual versão você quer manter ligada:</div>
                 ${Object.entries(dupGroups)
                     .filter(([, arr]) => arr.length > 1)
                     .map(([key, arr], idx) => {
-                        const readableKey = key.startsWith('no-uuid:') ? 'Sem UUID' : key;
+                        const readableKey = key.startsWith('no-uuid:') ? 'Sem Identificador UUID' : key;
                         let activeIdx = (state.duplicateSelection && state.duplicateSelection[key] !== undefined)
                             ? state.duplicateSelection[key]
                             : undefined;
@@ -206,19 +206,19 @@ export function renderActivationOptions() {
                             `<div class="dupe-group">
                                 <div class="dupe-group-header">
                                     <span class="dupe-key">Grupo ${idx + 1}: ${escapeHtml(readableKey)}</span>
-                                    <span class="dupe-count">(${arr.length} itens)</span>
+                                    <span class="dupe-count">(${arr.length} cópias)</span>
                                 </div>
                                 <div class="dupe-options">
                                     ${optionsHTML}
                                     <label class="dupe-option">
                                         <input type="radio" name="dupe_grp_${idx}" id="dupe_${idx}_none" value="__none" ${activeIdx === -1 ? 'checked' : ''}
                                             data-group-key="${escapeHtml(key)}" class="dupe-radio-none">
-                                        <span>Nenhum</span>
+                                        <span>❌ Desligar Todos</span>
                                     </label>
                                     <label class="dupe-option">
                                         <input type="radio" name="dupe_grp_${idx}" id="dupe_${idx}_both" value="__both" ${activeIdx === -2 ? 'checked' : ''}
                                             data-group-key="${escapeHtml(key)}" class="dupe-radio-both">
-                                        <span>Ambos</span>
+                                        <span>⚠️ Manter Ambos (Pode dar erro no jogo)</span>
                                     </label>
                                 </div>
                             </div>`
@@ -235,8 +235,8 @@ export function renderActivationOptions() {
                 <h4>${title}</h4>
                 ${typeKey === 'unknown' ? `
                 <p class="unknown-packs-description">
-                    Estes packs não puderam ser identificados automaticamente. 
-                    ${packs.some(p => p.fromWorld) ? 'Packs do mundo serão mantidos na pasta original.' : 'Selecione o tipo para cada pack.'}
+                    Estes arquivos não possuem informação clara se são de textura ou de comportamento. 
+                    ${packs.some(p => p.fromWorld) ? 'Packs do mundo serão mantidos na pasta original.' : 'Por favor, selecione abaixo se este mod adiciona funções (Behavior) ou visual (Resource):'}
                 </p>` : ''}
                 <div class="packs-list">
         `;
@@ -252,9 +252,9 @@ export function renderActivationOptions() {
             const isChecked = targetState[pack._id];
             const fromWorld = pack.fromWorld ? ' 🌍' : (typeKey === 'unknown' ? ' ❓' : ' ✨');
             const originLabel = pack.fromWorld 
-                ? (typeKey === 'unknown' ? 'Do Mundo (pasta original)' : 'Do Mundo') 
-                : (typeKey === 'unknown' ? 'Novo (precisa categorização)' : 'Novo');
-            const corruptedWarning = pack.hasCorruptedManifest ? ' <span class="corrupted-badge" title="Manifest corrompido">⚠️</span>' : '';
+                ? (typeKey === 'unknown' ? 'Do Mundo (pasta original)' : 'Já estava no Mundo') 
+                : (typeKey === 'unknown' ? 'Novo (selecione tipo abaixo)' : 'Novo Mod Adicionado');
+            const corruptedWarning = pack.hasCorruptedManifest ? ' <span class="corrupted-badge" title="Manifest corrompido ou corrigido">⚠️</span>' : '';
 
             let valBadgeHTML = '';
             let valDetailsHTML = '';
@@ -273,8 +273,8 @@ export function renderActivationOptions() {
                     <details class="validation-details ${hasErrors ? 'has-errors' : ''}">
                         <summary class="validation-summary ${hasErrors ? 'has-errors' : 'has-warnings'}">
                             ${hasErrors 
-                                ? `❌ Problemas de schema no manifest (${pack.validation.errors.length})` 
-                                : `⚠️ Avisos de compatibilidade (${pack.validation.warnings.length})`}
+                                ? `❌ Detalhes dos erros no arquivo manifest do mod (${pack.validation.errors.length})` 
+                                : `⚠️ Detalhes dos avisos de compatibilidade (${pack.validation.warnings.length})`}
                         </summary>
                         <ul class="validation-list">
                             ${pack.validation.errors.map(err => `<li class="val-err">${escapeHtml(err)}</li>`).join('')}
@@ -296,13 +296,13 @@ export function renderActivationOptions() {
                                    class="pack-activation-check"
                                    ${isChecked ? 'checked' : ''}>
                             <span class="pack-name">${fromWorld} ${escapeHtml(pack.name)}${corruptedWarning} <span class="chip ${chipClass}">${chipLabel}</span>${valBadgeHTML}</span>
-                            <span class="pack-uuid">UUID: ${escapeHtml(pack.manifest?.header?.uuid || 'Sem UUID')}</span>
+                            <span class="pack-uuid">Identificador: ${escapeHtml(pack.manifest?.header?.uuid || 'Sem UUID')}</span>
                             <span class="pack-origin">${originLabel}</span>
                         </label>
                         <div class="pack-actions">
                             ${(!pack.manifest?.header?.uuid || !Array.isArray(pack.manifest?.header?.version)) && (!pack.fromWorld || typeKey !== 'unknown') ? `
-                            <button type="button" class="btn-inline btn-toggle-edit" data-editor-id="editor_${packDomId}" title="Editar UUID/Versão">✏️ UUID/Versão</button>` : ''}
-                            <button type="button" class="btn-inline btn-download-pack" data-pack-id="${pack._id}" title="Baixar este addon como .mcpack individual">📥 .mcpack</button>
+                            <button type="button" class="btn-inline btn-toggle-edit" data-editor-id="editor_${packDomId}" title="Editar código UUID ou Versão manualmente">✏️ Corrigir UUID/Versão</button>` : ''}
+                            <button type="button" class="btn-inline btn-download-pack" data-pack-id="${pack._id}" title="Baixar este mod individual em formato .mcpack (basta 1 clique para instalar no celular ou PC)">📥 Baixar .mcpack</button>
                         </div>
                     </div>
                     ${valDetailsHTML}
@@ -315,18 +315,18 @@ export function renderActivationOptions() {
                             <label>Versão</label>
                             <input type="text" id="version_${packDomId}" value="${escapeHtml(Array.isArray(pack.manifest?.header?.version) ? pack.manifest.header.version.join('.') : '')}" placeholder="1.0.0" />
                         </div>
-                        <button type="button" class="btn-success btn-inline btn-save-essentials" data-pack-dom-id="${packDomId}" data-pack-type="${typeKey}" data-internal-id="${pack._id}">Salvar</button>
+                        <button type="button" class="btn-success btn-inline btn-save-essentials" data-pack-dom-id="${packDomId}" data-pack-type="${typeKey}" data-internal-id="${pack._id}">💾 Salvar Correção</button>
                     </div>
             `;
 
             if (typeKey === 'unknown' && !pack.fromWorld && pack.needsCategory) {
                 section += `
                     <div class="category-selector">
-                        <label for="category_${packDomId}">Categorizar como:</label>
+                        <label for="category_${packDomId}">Este mod é de Comportamento ou Textura?</label>
                         <select id="category_${packDomId}" data-pack-index="${index}" class="select-category">
-                            <option value="">-- Selecione --</option>
-                            <option value="behavior">Behavior Pack</option>
-                            <option value="resource">Resource Pack</option>
+                            <option value="">-- Clique aqui para escolher --</option>
+                            <option value="behavior">📘 Behavior Pack (Código / Criaturas / Itens)</option>
+                            <option value="resource">🎨 Resource Pack (Texturas / Visual / Sons)</option>
                         </select>
                     </div>
                 `;
@@ -339,9 +339,9 @@ export function renderActivationOptions() {
         return section;
     }
 
-    html += renderPackGroup('behavior', '📘 Behavior Packs', state.processedAddons.behaviorPacks, 'bp', 'BP');
-    html += renderPackGroup('resource', '🎨 Resource Packs', state.processedAddons.resourcePacks, 'rp', 'RP');
-    html += renderPackGroup('unknown', '❓ Packs Desconhecidos', state.processedAddons.unknownPacks, 'unk', '?');
+    html += renderPackGroup('behavior', '📘 Behavior Packs (Comportamento / Criaturas / Itens)', state.processedAddons.behaviorPacks, 'bp', 'BP (Comportamento)');
+    html += renderPackGroup('resource', '🎨 Resource Packs (Texturas / Visual / Sons)', state.processedAddons.resourcePacks, 'rp', 'RP (Textura)');
+    html += renderPackGroup('unknown', '❓ Mods que precisam de classificação', state.processedAddons.unknownPacks, 'unk', '? (Classificar)');
 
     if (html === '') {
         html = '<p class="no-packs">Nenhum addon processado.</p>';

@@ -1069,6 +1069,256 @@ main {
     color: #a5d6ff;
 }
 
+/* Guia Rápido Visual no Topo */
+.quick-guide-banner {
+    background: linear-gradient(135deg, rgba(103, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%);
+    border: 1px solid rgba(103, 126, 234, 0.35);
+    border-radius: var(--border-radius-md);
+    padding: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.quick-guide-title {
+    font-size: 1.15rem;
+    color: #a5d6ff;
+    margin-bottom: var(--spacing-sm);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.quick-guide-steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: var(--spacing-sm);
+}
+
+.quick-guide-step {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-sm);
+    background: rgba(0, 0, 0, 0.25);
+    padding: var(--spacing-sm);
+    border-radius: var(--border-radius-sm);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.quick-step-badge {
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+    background: var(--primary-color);
+    color: white;
+    font-weight: bold;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.95rem;
+}
+
+.quick-step-text strong {
+    display: block;
+    color: var(--text-primary);
+    font-size: 0.95rem;
+    margin-bottom: 2px;
+}
+
+.quick-step-text span {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    line-height: 1.4;
+    display: block;
+}
+
+.quick-step-text code {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 1px 4px;
+    border-radius: 3px;
+    color: #7ee787;
+    font-size: 0.85em;
+}
+
+/* Caixa de aviso em linha para RAR / 7z */
+.warning-box-inline {
+    display: flex;
+    gap: var(--spacing-sm);
+    background: rgba(255, 152, 0, 0.12);
+    border: 1px solid rgba(255, 152, 0, 0.4);
+    border-radius: var(--border-radius-sm);
+    padding: var(--spacing-sm) var(--spacing-md);
+    margin: var(--spacing-sm) auto;
+    text-align: left;
+    max-width: 580px;
+}
+
+.warning-box-icon {
+    font-size: 1.4rem;
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+.warning-box-text strong {
+    display: block;
+    color: #ffb74d;
+    font-size: 0.92rem;
+    margin-bottom: 2px;
+}
+
+.warning-box-text p {
+    color: var(--text-secondary);
+    font-size: 0.84rem;
+    line-height: 1.4;
+    margin: 0;
+}
+
+.warning-box-text code {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 2px 4px;
+    border-radius: 3px;
+    color: #ffe082;
+}
+
+/* Card explicativo na área de resultados */
+.results-guide-card {
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--border-radius-sm);
+    padding: var(--spacing-md);
+    margin: var(--spacing-md) 0;
+    text-align: left;
+}
+
+.results-guide-card h4 {
+    color: #a5d6ff;
+    margin-bottom: 8px;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.results-guide-card ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.results-guide-card li {
+    font-size: 0.88rem;
+    color: var(--text-secondary);
+    line-height: 1.4;
+}
+
+.results-guide-card li strong {
+    color: var(--text-primary);
+}
+
+/* Cartões de métodos dentro dos tutoriais */
+.guide-method-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--border-radius-sm);
+    padding: var(--spacing-md);
+    margin: var(--spacing-md) 0;
+}
+
+.guide-method-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--spacing-sm);
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.guide-method-header h4 {
+    font-size: 1.05rem;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.tutorial-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.tutorial-badge-easy {
+    background: rgba(46, 204, 113, 0.2);
+    color: #2ecc71;
+    border: 1px solid rgba(46, 204, 113, 0.4);
+}
+
+.tutorial-badge-important {
+    background: rgba(244, 67, 54, 0.2);
+    color: #ff8a80;
+    border: 1px solid rgba(244, 67, 54, 0.4);
+}
+
+.tutorial-badge-server {
+    background: rgba(103, 126, 234, 0.2);
+    color: #a5d6ff;
+    border: 1px solid rgba(103, 126, 234, 0.4);
+}
+
+/* Caixa com comando ou caminho copiável */
+.code-box {
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: var(--border-radius-sm);
+    padding: 10px 12px;
+    margin: 8px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    overflow-x: auto;
+}
+
+.code-box code {
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 0.88rem;
+    color: #7ee787;
+    white-space: nowrap;
+}
+
+/* FAQ itens destacados */
+.faq-block {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.faq-item {
+    background: rgba(255, 255, 255, 0.03);
+    border-left: 3px solid #667eea;
+    border-radius: 0 var(--border-radius-sm) var(--border-radius-sm) 0;
+    padding: 12px 14px;
+}
+
+.faq-item h4 {
+    color: #a5d6ff;
+    font-size: 0.98rem;
+    margin-bottom: 6px;
+}
+
+.faq-item p {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin: 0;
+}
+
 @media (max-width: 600px) {
     .tutorial-step {
         gap: var(--spacing-sm);

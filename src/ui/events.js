@@ -21,26 +21,26 @@ import { downloadOrganizedAddons, downloadSinglePack } from '../services/exportS
 export function validateFile(file) {
     const errors = [];
     if (file.size > CONFIG.MAX_FILE_SIZE) {
-        errors.push(`Arquivo muito grande`);
+        errors.push(`Arquivo muito grande (tamanho máximo suportado: 500 MB).`);
     }
     if (file.size === 0) {
-        errors.push('Arquivo vazio');
+        errors.push('O arquivo selecionado está vazio (tamanho 0 bytes).');
     }
     const fileName = file.name.toLowerCase();
     const extension = fileName.substring(fileName.lastIndexOf('.'));
     const isTarGz = fileName.endsWith('.tar.gz');
     const isValid = CONFIG.SUPPORTED_EXTENSIONS.includes(extension) || isTarGz;
     if (extension === '.rar' || extension === '.7z') {
-        errors.push(`${extension} não é suportado no navegador. Extraia e envie como .zip ou .mcpack`);
+        errors.push(`Arquivos ${extension} não abrem direto no navegador. Extraia o conteúdo antes usando o app ZArchiver (no celular) ou WinRAR (no PC) e envie como .zip ou .mcpack.`);
     } else if (!isValid) {
-        errors.push(`Extensão não suportada: ${extension}`);
+        errors.push(`Formato não suportado: ${extension}. Envie apenas arquivos .mcpack, .mcaddon, .mcworld ou .zip.`);
     }
     return { valid: errors.length === 0, errors };
 }
 
 export async function addFiles(files) {
     if (state.uploadedFiles.length + files.length > CONFIG.MAX_FILES) {
-        showToast(`⚠️ Máximo de ${CONFIG.MAX_FILES} arquivos por vez`, 'error');
+        showToast(`⚠️ Você pode enviar no máximo ${CONFIG.MAX_FILES} arquivos por vez`, 'error');
         return;
     }
 
@@ -73,7 +73,7 @@ export async function addFiles(files) {
         if (isWorld) {
             state.uploadedFiles = [file];
             state.worldMode = true;
-            showToast('🌍 Mundo detectado!', 'success');
+            showToast('🌍 Mapa do Minecraft detectado com sucesso!', 'success');
             addedCount = 1;
             break;
         } else {
@@ -87,9 +87,9 @@ export async function addFiles(files) {
 
     if (addedCount > 0) {
         const count = state.uploadedFiles.length;
-        showToast(`✅ ${count} arquivo${count > 1 ? 's' : ''} pronto${count > 1 ? 's' : ''}`, 'success', 2000);
+        showToast(`✅ ${count} arquivo(s) carregado(s)! Agora clique no botão verde "Passo 2: Processar Addons".`, 'success', 3500);
     } else if (errorCount > 0) {
-        showToast(`❌ ${errorCount} arquivo${errorCount > 1 ? 's' : ''} com erro`, 'error');
+        showToast(`❌ ${errorCount} arquivo(s) com erro. Veja as mensagens acima.`, 'error');
     }
 
     renderFilesList();
@@ -122,22 +122,22 @@ export async function processAddons() {
     try {
         const totalFiles = state.uploadedFiles.length;
         if (state.worldMode && totalFiles === 1) {
-            updateProgress(25, 'Detectado mundo, analisando conteúdo...');
+            updateProgress(25, 'Lendo o mapa do Minecraft e procurando addons...');
             await processWorld(state.uploadedFiles[0]);
-            updateProgress(100, 'Mundo carregado!');
+            updateProgress(100, 'Mapa carregado com sucesso!');
         } else {
             for (let i = 0; i < totalFiles; i++) {
                 const file = state.uploadedFiles[i];
                 const progress = ((i + 1) / totalFiles) * 100;
-                updateProgress(progress, `Processando ${file.name}...`);
+                updateProgress(progress, `Processando arquivo ${i + 1} de ${totalFiles}: ${file.name}...`);
                 await processAddonFile(file);
             }
-            updateProgress(100, 'Concluído!');
+            updateProgress(100, 'Todos os addons foram processados com sucesso!');
         }
         showResults();
     } catch (error) {
         console.error('Erro ao processar addons:', error);
-        showToast(`❌ Erro: ${error.message}`, 'error', 5000);
+        showToast(`❌ Ocorreu um erro ao processar: ${error.message}`, 'error', 5000);
         hapticFeedback('error');
         elements.progressSection.style.display = 'none';
         elements.actions.style.display = 'flex';

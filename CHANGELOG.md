@@ -3,6 +3,14 @@
 ## [Unreleased]
 
 ### Added
+- **Reformulação Didática Integral e Novos Mega-Tutoriais**:
+  - **Banner de Guia Rápido em 3 Passos**: Orientação visual no topo da interface explicando o fluxo básico (*1. Envie, 2. Processe, 3. Baixe e Jogue*).
+  - **Glossário Bedrock para Iniciantes**: Explicações simples em linguagem acessível sobre a diferença entre *Behavior Packs (BP - código/função)*, *Resource Packs (RP - visual/texturas)*, *Manifest / UUID* e formatos de arquivo.
+  - **Tutorial Passo a Passo para Celular (Android)**: Guia completo para instalação direta com 1 toque (`.mcpack`) e via pastas com o aplicativo gratuito **ZArchiver** (incluindo permissões do Android 13 e 14).
+  - **Tutorial Passo a Passo para Computador (Windows 10/11)**: Instruções com atalho direto de teclado `Win + R` e caminho pré-formatado para a pasta `minecraftWorlds`.
+  - **Tutorial para Servidores Dedicados (EnxadaHost)**: Instruções claras de substituição de pastas e arquivos de ativação no diretório `worlds/Bedrock level/`.
+  - **Guia Obrigatório de Ativação de Experimentos**: Passo a passo detalhado para ativar todos os recursos experimentais no Minecraft, prevenindo mais de 90% dos erros comuns de carregamento de mods.
+  - **FAQ Didática Expandida**: Respostas diretas e sem jargões para itens invisíveis, texturas roxas/pretas, arquivos `.rar`/`.7z` e integridade do mundo.
 - **Validação de Schema Bedrock Oficial (`manifestValidator.js`)**: Mecanismo de validação estrita que inspeciona `format_version`, integridade do bloco `header`, validade de sintaxe dos UUIDs (padrão 8-4-4-4-12), formato da versão (tripla de inteiros [major, minor, patch]), compatibilidade de `min_engine_version` e prevenção de UUIDs duplicados entre módulo e cabeçalho.
 - **Feedback Visual de Schema na UI**: Exibição de badges coloridos (❌ erros e ⚠️ avisos) em cada cartão de addon, com painel expansível `<details>` listando cada inconsistência encontrada e atualizado em tempo real após edições.
 - **Download Individual de Addon (`.mcpack`)**: Adicionado botão "📥 .mcpack" em cada card de pack, permitindo baixar addons avulsos re-empacotados e com `manifest.json` atualizado diretamente pelo navegador.
